@@ -1,5 +1,4 @@
 import tensorflow as tf
-import tensorflow.math as tfm
 import tensorflow.linalg as tfl
 
 @tf.keras.utils.register_keras_serializable(
@@ -7,8 +6,8 @@ import tensorflow.linalg as tfl
     name="complex_residual_2d"
 )
 class complex_residual_2d(tf.keras.layers.Layer):
-  def __init__(sf):
-    super(complex_residual_2d, sf).__init__()
+  def __init__(sf, name__='Complex Residual 2D'):
+    super(complex_residual_2d, sf).__init__(name=name__)
 
   def construct_matrix(sf, shape__, name__):
     '''
@@ -77,12 +76,9 @@ class complex_residual_2d(tf.keras.layers.Layer):
 
   def build(sf, input_shape__):
     # alpha_shape: (N, H0, W0, C0)
-    alpha_shape = input_shape__[1]
+    alpha_shape = input_shape__[1][0]
     # beta_shape: (N, H1, W1, C0)
-    beta_shape = input_shape__[0]
-
-    tf.print(alpha_shape)
-    tf.print(beta_shape)
+    beta_shape = input_shape__[0][0]
 
     # P_shape: N x C0 x H1 x H0 (in NCHW format)
     P_shape = (1, alpha_shape[-1], beta_shape[1], alpha_shape[1])
@@ -95,19 +91,19 @@ class complex_residual_2d(tf.keras.layers.Layer):
     sf.QJ = sf.construct_matrix(Q_shape, 'Q_matrix_imag')
 
   def call(sf, input__):
-    alpha__ = sf.to_nchw(input__[1])
-    beta__ = sf.to_nchw(input__[0])
-
-    alphaR = tfm.real(alpha__)
-    alphaJ = tfm.imag(alpha__)
-    betaR = tfm.real(beta__)
-    betaJ = tfm.imag(beta__)
+    # input__: (tuple:alpha, tuple:beta)
+    alphaR = sf.to_nchw(input__[1][0])
+    alphaJ = sf.to_nchw(input__[1][1])
+    betaR = input__[0][0]
+    betaJ = input__[0][1]
 
     u = sf.consecutive_matmul([(alphaR, sf.QR), (-1 * alphaJ, sf.QJ)])
     v = sf.consecutive_matmul([(alphaR, sf.QJ), (alphaJ, sf.QR)])
-
+    
     PalphaQR = sf.consecutive_matmul([(sf.PR, u), (-1 * sf.PJ, v)])
     PalphaQJ = sf.consecutive_matmul([(sf.PR, v), (sf.PJ, u)])
-    PalphaQ = tf.complex(PalphaQR, PalphaQJ)
+    PalphaQ = (sf.to_nhwc(PalphaQR), sf.to_nhwc(PalphaQJ))
+    beta = (betaR, betaJ)
+  
 
-    return beta__ + PalphaQ
+    return beta + PalphaQ

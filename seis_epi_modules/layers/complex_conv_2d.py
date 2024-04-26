@@ -1,5 +1,4 @@
 import tensorflow as tf
-import tensorflow.math as tfm
 import tensorflow.linalg as tfl
 
 @tf.keras.utils.register_keras_serializable(
@@ -29,8 +28,8 @@ class complex_conv_2d(tf.keras.layers.Layer):
     pass
 
   def call(sf, inputs__):
-    u = tfm.real(inputs__)
-    v = tfm.imag(inputs__)
+    u = inputs__[0]
+    v = inputs__[1]
     conv_up = tf.nn.conv2d(
         input=u, filters=sf.kernel_p,
         strides=sf.universal_strides,
@@ -54,4 +53,4 @@ class complex_conv_2d(tf.keras.layers.Layer):
 
     real_conv = conv_up + conv_vq
     imag_conv = conv_uq + conv_vp
-    return tf.complex(real_conv, imag_conv)
+    return (real_conv, imag_conv)

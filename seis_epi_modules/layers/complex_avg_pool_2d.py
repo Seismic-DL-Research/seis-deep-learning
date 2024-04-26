@@ -1,5 +1,4 @@
 import tensorflow as tf
-import tensorflow.math as tfm
 import tensorflow.linalg as tfl
 
 @tf.keras.utils.register_keras_serializable(
@@ -16,8 +15,8 @@ class complex_avg_pool_2d(tf.keras.layers.Layer):
     pass
 
   def call(sf, inputs__):
-    u = tfm.real(inputs__)
-    v = tfm.imag(inputs__)
+    u = inputs__[0]
+    v = inputs__[1]
     pool_u = tf.nn.avg_pool2d(
         input=u, ksize=sf.pool_size,
         strides=sf.universal_strides,
@@ -28,4 +27,4 @@ class complex_avg_pool_2d(tf.keras.layers.Layer):
         strides=sf.universal_strides,
         padding='VALID'
     )
-    return tf.complex(pool_u, pool_v)
+    return (pool_u, pool_v)
