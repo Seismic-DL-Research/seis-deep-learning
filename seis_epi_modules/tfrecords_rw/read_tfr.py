@@ -1,14 +1,16 @@
 import tensorflow as tf
 
-def read_tfr(inFile__):
+def read_tfr(inFile__, with_year__):
   def decoder(n):
     keys = ['data', 'aavg_ratio', 'overall_ratio', 'magn', 'evla',
             'evlo', 'stla', 'stlo', 'dist',
-            'filename', 'start', 'year']
+            'filename', 'start']
             
-    dtyp = [tf.float32 for _ in range(9)]
-    dtyp += [tf.string for _ in range(2)]
-    dtyp += [tf.int32]
+    dtyp = [tf.float32 for _ in range(9)] + [tf.string for _ in range(2)]
+    
+    if with_year__:
+      keys += ['year']
+      dtyp += [tf.int32]
 
     configs = {
         key: tf.io.FixedLenFeature([], tf.string)
