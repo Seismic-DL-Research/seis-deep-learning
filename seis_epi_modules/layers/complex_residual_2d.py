@@ -59,8 +59,8 @@ class complex_residual_2d(tf.keras.layers.Layer):
     '''
       consecutive_matmul
         * Used to weigh matrix operations from the given tuples of two matrices.
-        * On each tuple, tfl.matmul operation is conducted. 
-        * All the result of tfl.matmul are added element-wise-ly.
+        * On each tuple, tf.matmul operation is conducted. 
+        * All the result of tf.matmul are added element-wise-ly.
       receive:
         * "matrix_sets" (type: list | containing tuples of two matrices)
       return:
@@ -75,33 +75,39 @@ class complex_residual_2d(tf.keras.layers.Layer):
     return sum_matrix
 
   def build(sf, input_shape__):
-    # alpha_shape: (N, H0, W0, C0)
-    alpha_shape = input_shape__[1][0]
-    # beta_shape: (N, H1, W1, C0)
-    beta_shape = input_shape__[0][0]
+    # alpha_shape: (N, 2, H0, W0, C0)
+    alpha_shape = input_shape__[1]
+    # beta_shape: (N, 2, H1, W1, C0)
+    beta_shape = input_shape__[0]
 
     # P_shape: N x C0 x H1 x H0 (in NCHW format)
-    P_shape = (1, alpha_shape[-1], beta_shape[1], alpha_shape[1])
+    P_shape = (1, alpha_shape[-1], beta_shape[2], alpha_shape[2])
     sf.PR = sf.construct_matrix(P_shape, 'P_matrix_real')
     sf.PJ = sf.construct_matrix(P_shape, 'P_matrix_imag')
 
     # Q_shape: N x C0 x W0 x W1 (in NCHW format)
-    Q_shape = (1, alpha_shape[-1], alpha_shape[2], beta_shape[2])
+    Q_shape = (1, alpha_shape[-1], alpha_shape[3], beta_shape[3])
     sf.QR = sf.construct_matrix(Q_shape, 'Q_matrix_real')
     sf.QJ = sf.construct_matrix(Q_shape, 'Q_matrix_imag')
 
+  def make_pair(sf, a__, b__):
+    a = tf.expand_dims(a__, axis=1)
+    b = tf.expand_dims(b__, axis=1)
+    return tf.concat([a, b], axis=1)
+
   def call(sf, input__):
     # input__: (tuple:alpha, tuple:beta)
-    alphaR = sf.to_nchw(input__[1][0])
-    alphaJ = sf.to_nchw(input__[1][1])
-    betaR = input__[0][0]
-    betaJ = input__[0][1]
+    alphaR = sf.to_nchw(input__[1][:,0])
+    alphaJ = sf.to_nchw(input__[1][:,1])
+    betaR = input__[0][:,0]
+    betaJ = input__[0][:,1]
 
     u = sf.consecutive_matmul([(alphaR, sf.QR), (-1 * alphaJ, sf.QJ)])
     v = sf.consecutive_matmul([(alphaR, sf.QJ), (alphaJ, sf.QR)])
     
     PalphaQR = sf.consecutive_matmul([(sf.PR, u), (-1 * sf.PJ, v)])
     PalphaQJ = sf.consecutive_matmul([(sf.PR, v), (sf.PJ, u)])
-    PalphaQ = (sf.to_nhwc(PalphaQR), sf.to_nhwc(PalphaQJ))
-    beta = (betaR, betaJ)
-    return beta + PalphaQ
+
+    PalphaQR = sf.to_nhwc(PalphaQR)
+    PalphaQJ = sf.to_nhwc(PalphaQJ)
+    return sf.make_pair(betaR + PalphaQR, betaJ + PalphaQJ)

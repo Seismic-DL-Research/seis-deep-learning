@@ -1,5 +1,4 @@
 import tensorflow as tf
-import tensorflow.linalg as tfl
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
@@ -58,5 +57,5 @@ class complex_conv_2d(tf.keras.layers.Layer):
 
     real_conv = conv_up + conv_vq
     imag_conv = conv_uq + conv_vp
-    
+
     return sf.make_pair(real_conv, imag_conv)

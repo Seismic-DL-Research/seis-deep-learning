@@ -1,5 +1,4 @@
 import tensorflow as tf
-import tensorflow.linalg as tfl
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
