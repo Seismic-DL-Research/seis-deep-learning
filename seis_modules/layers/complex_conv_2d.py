@@ -4,11 +4,11 @@ import tensorflow.linalg as tfl
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
-    name="ComplexConv2D"
+    name="complex_conv_2d"
 )
-class ComplexConv2D(tf.keras.layers.Layer):
+class complex_conv_2d(tf.keras.layers.Layer):
   def __init__(sf, kernel_size__, kernel_total__):
-    super(ComplexConv2D, sf).__init__()
+    super(complex_conv_2d, sf).__init__()
     sf.kernel_size = kernel_size__
     sf.kernel_total = kernel_total__
     sf.universal_strides = [1,1,1,1]

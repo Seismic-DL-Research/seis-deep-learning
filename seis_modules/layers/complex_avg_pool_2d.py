@@ -4,11 +4,11 @@ import tensorflow.linalg as tfl
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
-    name="ComplexAvgPool2D"
+    name="complex_avg_pool_2d"
 )
-class ComplexAvgPool2D(tf.keras.layers.Layer):
+class complex_avg_pool_2d(tf.keras.layers.Layer):
   def __init__(sf, pool_size__):
-    super(ComplexAvgPool2D, sf).__init__()
+    super(complex_avg_pool_2d, sf).__init__()
     sf.pool_size = pool_size__
     sf.universal_strides = [1,1,1,1]
 
