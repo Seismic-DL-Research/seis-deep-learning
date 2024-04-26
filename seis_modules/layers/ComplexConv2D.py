@@ -6,8 +6,6 @@ import tensorflow.linalg as tfl
     package="thesis-cvnn",
     name="ComplexConv2D"
 )
-
-# H X W X C
 class ComplexConv2D(tf.keras.layers.Layer):
   def __init__(sf, kernel_size__, kernel_total__):
     super(ComplexConv2D, sf).__init__()
