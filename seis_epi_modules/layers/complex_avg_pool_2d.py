@@ -14,9 +14,14 @@ class complex_avg_pool_2d(tf.keras.layers.Layer):
   def build(sf, input_shape__):
     pass
 
+  def make_pair(sf, a__, b__):
+    a = tf.expand_dims(a__, axis=1)
+    b = tf.expand_dims(b__, axis=1)
+    return tf.concat([a, b], axis=1)
+
   def call(sf, inputs__):
-    u = inputs__[0]
-    v = inputs__[1]
+    u = inputs__[:,0]
+    v = inputs__[:,1]
     pool_u = tf.nn.avg_pool2d(
         input=u, ksize=sf.pool_size,
         strides=sf.universal_strides,
@@ -27,4 +32,5 @@ class complex_avg_pool_2d(tf.keras.layers.Layer):
         strides=sf.universal_strides,
         padding='VALID'
     )
-    return (pool_u, pool_v)
+
+    return sf.make_pair(pool_u, pool_v)

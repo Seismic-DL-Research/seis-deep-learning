@@ -27,9 +27,14 @@ class complex_conv_2d(tf.keras.layers.Layer):
       )
     pass
 
+  def make_pair(sf, a__, b__):
+    a = tf.expand_dims(a__, axis=1)
+    b = tf.expand_dims(b__, axis=1)
+    return tf.concat([a, b], axis=1)
+
   def call(sf, inputs__):
-    u = inputs__[0]
-    v = inputs__[1]
+    u = inputs__[:,0]
+    v = inputs__[:,1]
     conv_up = tf.nn.conv2d(
         input=u, filters=sf.kernel_p,
         strides=sf.universal_strides,
@@ -53,4 +58,5 @@ class complex_conv_2d(tf.keras.layers.Layer):
 
     real_conv = conv_up + conv_vq
     imag_conv = conv_uq + conv_vp
-    return (real_conv, imag_conv)
+    
+    return sf.make_pair(real_conv, imag_conv)

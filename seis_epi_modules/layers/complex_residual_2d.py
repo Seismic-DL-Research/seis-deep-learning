@@ -104,6 +104,4 @@ class complex_residual_2d(tf.keras.layers.Layer):
     PalphaQJ = sf.consecutive_matmul([(sf.PR, v), (sf.PJ, u)])
     PalphaQ = (sf.to_nhwc(PalphaQR), sf.to_nhwc(PalphaQJ))
     beta = (betaR, betaJ)
-  
-
     return beta + PalphaQ
