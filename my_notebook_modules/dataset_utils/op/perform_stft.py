@@ -1,6 +1,6 @@
 import tensorflow as tf
 import tensorflow.math as tfm
-import seis_epi_modules as sem
+import my_notebook_modules as mynbm
 from scipy.signal import stft
 
 def perform_stft(dataset__, take_size__, batch_size__):
@@ -19,7 +19,7 @@ def perform_stft(dataset__, take_size__, batch_size__):
     accumulated_data[2].append(i['magn'])
 
     if (len(accumulated_data[0]) > batch_size__):
-      sem.dataset_utils.io.write_tfr_from_list(accumulated_data, 
-                                               data_keys,
-                                               data_dtyp,
-                                               '../stft_debug.tfr')
+      mynbm.dataset_utils.io.write_tfr_from_list(accumulated_data, 
+                                                 data_keys,
+                                                 data_dtyp,
+                                                 '../stft_debug.tfr')
