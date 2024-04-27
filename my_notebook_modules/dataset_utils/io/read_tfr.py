@@ -29,7 +29,7 @@ def read_tfr(inFile__, keys__):
             - ['key_to_destiny.f32', 'key_to_doom.f32', 'key_to_glory.i32']
 
     return:
-      * (a dataset)
+      * (a dataset) <tf.data.Dataset> [0]
         a dataset that is ready to be read by tf.data.Dataset module.
   '''
   keys, keys_type = get_keys_and_types(keys__)
