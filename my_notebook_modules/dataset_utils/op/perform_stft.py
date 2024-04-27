@@ -20,17 +20,17 @@ def perform_stft(dataset__, take_size__, batch_size__,
     accumulated_data[1].append(i['dist'])
     accumulated_data[2].append(i['magn'])
 
-    if (len(accumulated_data[0]) > batch_size__):
+    if (len(accumulated_data[0]) >= batch_size__):
       write_incidents += 1
-      out_file = f'{save_stft__}-{write_incidents}.tfr'
       mynbm.dataset_utils.io.write_tfr_from_list(accumulated_data, 
                                                  data_keys,
                                                  data_dtyp,
-                                                 out_file)
+                                                 f'{save_stft__}-{write_incidents}.tfr')
+      accumulated_data = [[], [], []]
+
   if (len(accumulated_data[0]) != 0):
     write_incidents += 1
-    out_file = f'{save_stft__}-{write_incidents}.tfr'
     mynbm.dataset_utils.io.write_tfr_from_list(accumulated_data, 
                                                 data_keys,
                                                 data_dtyp,
-                                                out_file)
+                                                f'{save_stft__}-{write_incidents}.tfr')
