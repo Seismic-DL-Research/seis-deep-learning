@@ -75,7 +75,7 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
     record_bytes = tf.train.Example(features=collective).SerializeToString()
     f.write(record_bytes)
 
-    # increase the batch_epoch number.
+    # increase the batch_rounds number.
     batch_rounds += 1
 
   f.close()
