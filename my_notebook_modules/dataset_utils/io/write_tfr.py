@@ -19,7 +19,7 @@ def write_tfr_from_dataset(ds__, keys__, dtyp__, out_file__):
     for dsElement in ds__.take(-1):
       collective = tf.train.Features(
           feature = {
-              keys__[i]: featurize(serialize(dsElement[dsKey], dtyp__[i]))
+              dsKey: featurize(serialize(dsElement[dsKey], dtyp__[i]))
               for i, dsKey in enumerate(dsElement)
           }
       )
