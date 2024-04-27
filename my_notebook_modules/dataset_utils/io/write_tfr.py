@@ -17,6 +17,7 @@ def define_type(x):
 def get_keys_and_types(keys__):
   keys = [key.split('.')[0] for key in keys__]
   keys_type = [define_type(key.split('.')[1]) for key in keys__]
+  return keys, keys_type
 
 def write_tfr_from_dataset(ds__, keys__, batch_size__, 
                            take_size__, out_file__):
