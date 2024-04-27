@@ -4,7 +4,6 @@ import numpy as np
 
 def clip_event(seed_name__, temp_folder__, power_windows__, nsta__,
                nlta__, trigger_threshold__, data_threshold__):
-  mynbm.cwd.non_git()
   modes = ['UD', 'EW', 'NS']
 
   # waveforms, aavgratio, ovrratio, magn, evla, evlo, stla,
@@ -52,5 +51,4 @@ def clip_event(seed_name__, temp_folder__, power_windows__, nsta__,
   info_returned[11] = str(stream[0].stats.endtime)
   info_returned[12] = int(info_returned[10].split('-')[0])
 
-  mynbm.cwd.git()
   return info_returned

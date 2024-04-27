@@ -4,8 +4,6 @@ import my_notebook_modules as mynbm
 import os
 
 def fetch_extract_and_list(THESISPATH__, identifier__):
-  mynbm.cwd.non_git()
-
   modes = ['UD', 'EW', 'NS']
   for mode in modes:
     target_file = f'{THESISPATH__}/{mode}/'
@@ -18,5 +16,4 @@ def fetch_extract_and_list(THESISPATH__, identifier__):
 
   return_val = ([i.split('.')[0]
                 for i in os.listdir(f'{mode}/{temp_folder}')], temp_folder)
-  mynbm.cwd.git()
   return return_val
