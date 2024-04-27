@@ -8,19 +8,26 @@ def featurize(value__):
       bytes_list = tf.train.BytesList(value=[value__.numpy()])
   )
 
-# keys = ['data', 'aavg_ratio', 'overall_ratio', 'magn', 'evla',
-#           'evlo', 'stla', 'stlo', 'dist',
-#           'filename', 'start', 'year']
+def define_type(x):
+  if (x == 'f32'): return tf.float32
+  if (x == 'str'): return tf.string
+  if (x == 'i32'): return tf.int32
+  return -1
 
-# dtyp = [tf.float32 for _ in range(9)] + [tf.string for _ in range(2)] + [tf.int32]
-def write_tfr_from_dataset(ds__, keys__, dtyp__, out_file__):
+def get_keys_and_types(keys__):
+  keys = [key.split('.')[0] for key in keys__]
+  keys_type = [define_type(key.split('.')[1]) for key in keys__]
+
+def write_tfr_from_dataset(ds__, keys__, batch_size__, 
+                           take_size__, out_file__):
+  keys, keys_type = get_keys_and_types(keys__)
+
   with tf.io.TFRecordWriter(f'{out_file__}') as f:
-
-    for dsElement in ds__.take(-1):
+    for dsElement in ds__.batch(batch_size__).take(take_size__):
       collective = tf.train.Features(
           feature = {
-              dsKey: featurize(serialize(dsElement[dsKey], dtyp__[i]))
-              for i, dsKey in enumerate(dsElement)
+              key: featurize(serialize(dsElement[key], keys_type[i]))
+              for i, key in enumerate(keys)
           }
       )
       record_bytes = tf.train.Example(features=collective).SerializeToString()
@@ -28,10 +35,12 @@ def write_tfr_from_dataset(ds__, keys__, dtyp__, out_file__):
       f.write(record_bytes)
 
 def write_tfr_from_list(list_tensor__, keys__, dtyp__, out_file__):
+  keys, keys_type = get_keys_and_types(keys__)
+
   collective = tf.train.Features(
     feature={
-      tkey: featurize(serialize(list_tensor__[i], dtyp__[i]))
-      for i, tkey in enumerate(keys__)
+      key: featurize(serialize(list_tensor__[i], keys_type[i]))
+      for i, key in enumerate(keys)
     }
   )
   record_bytes = tf.train.Example(features=collective).SerializeToString()
