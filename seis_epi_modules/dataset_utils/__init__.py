@@ -1,3 +1,3 @@
 from .read_tfr import read_tfr
-from . import data_operation
+from .data_operation import *
 from .write_tfr import write_tfr

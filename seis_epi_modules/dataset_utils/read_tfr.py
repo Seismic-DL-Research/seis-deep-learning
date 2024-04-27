@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+@tf.autograph.experimental.do_not_convert
 def read_tfr(inFile__, with_year__):
   def decoder(n):
     keys = ['data', 'aavg_ratio', 'overall_ratio', 'magn', 'evla',
