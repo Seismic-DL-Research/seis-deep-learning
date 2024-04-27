@@ -63,7 +63,7 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
 
 def write_tfr_from_list(list_tensor__, keys__, out_file__):
   '''
-    write_tfr_from_dataset:
+    write_tfr_from_list:
       * Used to write tensorflow binary record files from a python list containing
         tensor data.
 
