@@ -33,3 +33,13 @@ def imprudent_mapFunc_add_year(x):
   year = tf.py_function(get_year, inp=[x['start']], Tout=tf.int32)
   x['year'] = year
   return x
+
+def filterFunc_split_by_year(condition, splitAt):
+  def core_opt(x):
+    if condition == 'before':
+      return x['year'] < splitAt
+    elif condition == 'after':
+      return x['year'] > splitAt
+    else:
+      return x
+  return core_opt
