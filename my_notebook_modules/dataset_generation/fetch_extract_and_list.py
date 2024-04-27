@@ -16,6 +16,7 @@ def fetch_extract_and_list(THESISPATH__, identifier__):
     with Tar.open(gz_filename, 'r') as z:
       z.extractall(f'{mode}')
 
+  return_val = ([i.split('.')[0]
+                for i in os.listdir(f'{mode}/{temp_folder}')], temp_folder)
   mynbm.cwd.git()
-  return [i.split('.')[0]
-          for i in os.listdir(f'{mode}/{temp_folder}')], temp_folder
+  return return_val
