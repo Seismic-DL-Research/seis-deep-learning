@@ -1,2 +1,2 @@
-from .dataset_operation import *
+from . import op
 from . import io
