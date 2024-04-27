@@ -27,7 +27,7 @@ def write_tfr_from_dataset(ds__, keys__, dtyp__, out_file__):
 
       f.write(record_bytes)
 
-def write_tfr_from_tensor(list_tensor__, keys__, dtyp__, out_file__, gg_):
+def write_tfr_from_listTensor(list_tensor__, keys__, dtyp__, out_file__):
   collective = tf.train.Features(
     feature={
       tkey: featurize(serialize(list_tensor__[i], dtyp__[i]))
