@@ -1,5 +1,6 @@
 import tensorflow as tf
 import tensorflow.math as tfm
+from scipy.signal import stft
 
 def mapFunc_normalize(x):
   maxVal = tf.expand_dims(tfm.reduce_max(x['data'], axis=-1), axis=-1)
@@ -30,7 +31,7 @@ def get_year(x):
   return year
 
 def imprudent_mapFunc_add_year(x):
-  year = tf.py_function(get_year, inp=[x['start']], Tout=tf.int32)
+  year = get_year(x['start'])
   x['year'] = year
   return x
 
@@ -43,3 +44,19 @@ def filterFunc_split_by_year(condition, splitAt):
     else:
       return x
   return core_opt
+
+@tf.py_function(Tout=tf.float32)
+def stft_process(x, nperseg__, noverlap__):
+  f, t, Z = stft(x, fs=100, nperseg=nperseg__, noverlap=noverlap__)
+  ZR = tf.expand_dims(tfm.real(Z), axis=1)
+  ZJ = tf.expand_dims(tfm.imag(Z), axis=1)
+  Z = tf.concat([ZR, ZJ], axis=1)
+  return Z
+
+def mapFunc_stft(nperseg__, noverlap__):
+  def core_opt(x):
+    Z = stft_process(x['data'], nperseg__, noverlap__)
+    x['data'] = Z
+    return x
+  return core_opt
+
