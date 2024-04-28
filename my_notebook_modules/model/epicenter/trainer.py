@@ -13,7 +13,7 @@ def trainer(model__, train_dataset__, opt__, batch_size__, epoch__):
         loss = mynbm.model.epicenter.mae(y_hat, y)
 
         # apply gradient descent to update weights
-        grad = g.gradient(loss, model__.trainable_vars)
-        opt__.apply_gradients(zip(grad, model__.trainable_vars))
+        grad = g.gradient(loss, model__.trainable_variables)
+        opt__.apply_gradients(zip(grad, model__.trainable_variables))
       print('Loss: ', loss)
   pass
