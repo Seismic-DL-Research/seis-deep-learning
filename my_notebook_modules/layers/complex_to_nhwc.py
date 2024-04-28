@@ -7,11 +7,10 @@ import my_notebook_modules as mynbm
     name="complex_to_nhwc"
 )
 class complex_to_nhwc(tf.keras.layers.Layer):
-  def __init__(sf, shape__):
-    layer_type = tf.constant('cnhwc', tf.string)
+  def __init__(sf):
+    layer_type = tf.constant('cinpt', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
     super(complex_to_nhwc, sf).__init__(name=layer_name.numpy().decode('utf-8'))
-    sf.shape = shape__
 
   def build(sf, input_shape__):
     pass

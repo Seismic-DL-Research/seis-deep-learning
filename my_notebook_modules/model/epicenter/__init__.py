@@ -1,3 +1,3 @@
-from .train import train
+from .train import Train
 from .trainer import trainer
-from .loss import loss
+from .loss import mae
