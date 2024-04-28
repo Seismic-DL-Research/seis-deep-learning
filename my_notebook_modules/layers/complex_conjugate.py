@@ -7,7 +7,7 @@ import my_notebook_modules as mynbm
     name="complex_conjugate"
 )
 class complex_conjugate(tf.keras.layers.Layer):
-  def __init__(sf, activation__):
+  def __init__(sf, activation__=None):
     layer_type = tf.constant('ccon', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
     super(complex_conjugate, sf).__init__(name=layer_name.numpy().decode('utf-8'))

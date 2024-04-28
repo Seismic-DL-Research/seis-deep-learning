@@ -6,7 +6,7 @@ import my_notebook_modules as mynbm
     name="complex_dense"
 )
 class complex_dense(tf.keras.layers.Layer):
-  def __init__(sf, dense_unit__, activation__):
+  def __init__(sf, dense_unit__, activation__=None):
     layer_type = tf.constant('cdns', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
     super(complex_dense, sf).__init__(name=layer_name.numpy().decode('utf-8'))
