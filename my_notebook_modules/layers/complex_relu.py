@@ -11,11 +11,11 @@ def relu_computation(x__):
 def complex_relu(inputs__):
   # ar, aJ: N x H x W x C
   aR, aJ = mynbm.layers.disintegrate_complex(inputs__)
+  bR = relu_computation(aR)
+  bJ = relu_computation(aJ)
 
-  bR = tf.expand_dims(relu_computation(aR), axis=1)
-  bJ = tf.expand_dims(relu_computation(aJ), axis=1)
-  tf.print(tf.shape(bR))
-  return inputs__
+  end_tensor = mynbm.layers.integrate_complex(bR, bJ)
+  return end_tensor
 
   
 
