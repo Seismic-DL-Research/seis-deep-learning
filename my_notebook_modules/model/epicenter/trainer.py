@@ -1,9 +1,16 @@
 import tensorflow as tf
 import my_notebook_modules as mynbm
+from tqdm import tqdm
 
 def trainer(model__, train_dataset__, opt__, batch_size__, epoch__):
-  for epoch in range(epoch__):
-    for train_dataset in train_dataset__.batch(batch_size__).take(-1):
+  total_batch = 0
+  for epoch in range(1, epoch__ + 1):
+    total = 1 if epoch == 1 else total_batch
+    print(f'\n\U0001f534 Epoch {epoch} out of {epoch__}')
+    bar = tqdm(total=total, ascii=' _█', position=0,
+               bar_format='|{bar:30}| [{elapsed}<{remaining}] {desc}')
+
+    for i, train_dataset in enumerate(train_dataset__.batch(batch_size__).take(-1)):
       with tf.GradientTape() as g:
         # get model's epicentral distance estimation values
         y_hat = model__(train_dataset['data'][:,:,:,:50,:])
@@ -15,5 +22,11 @@ def trainer(model__, train_dataset__, opt__, batch_size__, epoch__):
         # apply gradient descent to update weights
         grad = g.gradient(loss, model__.trainable_variables)
         opt__.apply_gradients(zip(grad, model__.trainable_variables))
-      print('Loss: ', loss)
+
+      if epoch == 1:
+        total_batch += 1
+        bar.set_description_str(f'Loss: {loss:.4f}')
+      else:
+        bar.update(1)
+        bar.set_description_str(f'Batch {i}/{total_batch} | Loss: {loss:.4f}')
   pass
