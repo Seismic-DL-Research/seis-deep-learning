@@ -9,8 +9,9 @@ import uuid
 class complex_conv_2d(tf.keras.layers.Layer):
   def __init__(sf, kernel_size__, kernel_total__,
               activation__):
-    layer_name = mynbm.layers.utils.random_name('cc2d').numpy().decode('utf-8')
-    super(complex_conv_2d, sf).__init__(name=layer_name)
+    layer_type = tf.constant('cc2d', tf.string)
+    layer_name = mynbm.layers.utils.random_name(layer_type)
+    super(complex_conv_2d, sf).__init__(name=layer_name.numpy().decode('utf-8'))
     sf.kernel_size = kernel_size__
     sf.kernel_total = kernel_total__
     sf.activation = activation__

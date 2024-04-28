@@ -8,8 +8,9 @@ import uuid
 )
 class complex_avg_pool_2d(tf.keras.layers.Layer):
   def __init__(sf, pool_size__, name__=None):
-    layer_name = mynbm.layers.utils.random_name('cap2d').numpy().decode('utf-8')
-    super(complex_avg_pool_2d, sf).__init__(name=layer_name)
+    layer_type = tf.constant('cap2d', tf.string)
+    layer_name = mynbm.layers.utils.random_name(layer_type)
+    super(complex_avg_pool_2d, sf).__init__(name=layer_name.numpy().decode('utf-8'))
     sf.pool_size = pool_size__
     sf.universal_strides = [1,1,1,1]
 
