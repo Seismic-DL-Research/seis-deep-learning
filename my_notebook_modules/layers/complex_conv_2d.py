@@ -60,8 +60,8 @@ class complex_conv_2d(tf.keras.layers.Layer):
     real_conv = conv_up + conv_vq
     imag_conv = conv_uq + conv_vp
 
-    # end_tensor: N x 2 x H x W x C
     end_tensor = mynbm.layers.utils.integrate_complex(real_conv, imag_conv)
+    if sf.activation == None: return end_tensor
     return sf.activation(end_tensor)
     
   def get_config(sf):

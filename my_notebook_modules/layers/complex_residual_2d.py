@@ -8,11 +8,12 @@ import uuid
     name="complex_residual_2d"
 )
 class complex_residual_2d(tf.keras.layers.Layer):
-  def __init__(sf):
+  def __init__(sf, activation__=None):
     layer_type = tf.constant('cr2d', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
     super(complex_residual_2d, sf).__init__(name=layer_name.numpy().decode('utf-8'))
-
+    sf.activation = activation__
+    
   def construct_matrix(sf, shape__, name__):
     '''
       construct_matrix:
@@ -108,4 +109,13 @@ class complex_residual_2d(tf.keras.layers.Layer):
 
     PalphaQR = sf.to_nhwc(PalphaQR)
     PalphaQJ = sf.to_nhwc(PalphaQJ)
-    return mynbm.layers.utils.integrate_complex(betaR + PalphaQR, betaJ + PalphaQJ)
+
+    end_tensor = mynbm.layers.utils.integrate_complex(betaR + PalphaQR, 
+                                                      betaJ + PalphaQJ)
+    if sf.activation == None: return end_tensor
+    return sf.activation(end_tensor)
+
+  def get_config(sf):
+    my_config = super(complex_residual_2d, sf).get_config()
+    my_config['activation__'] = sf.activation
+    return my_config

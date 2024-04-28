@@ -7,11 +7,12 @@ import uuid
     name="complex_avg_pool_2d"
 )
 class complex_avg_pool_2d(tf.keras.layers.Layer):
-  def __init__(sf, pool_size__, name__=None):
+  def __init__(sf, pool_size__, activation__=None, name__=None):
     layer_type = tf.constant('cap2d', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
     super(complex_avg_pool_2d, sf).__init__(name=layer_name.numpy().decode('utf-8'))
     sf.pool_size = pool_size__
+    sf.activation = activation__
     sf.universal_strides = [1,1,1,1]
 
   def build(sf, input_shape__):
@@ -30,5 +31,12 @@ class complex_avg_pool_2d(tf.keras.layers.Layer):
         strides=sf.universal_strides,
         padding='VALID'
     )
+    
+    end_tensor = mynbm.layers.utils.integrate_complex(pool_u, pool_v)
+    if sf.activation == None: return end_tensor
+    return sf.activation(end_tensor)
 
-    return mynbm.layers.utils.integrate_complex(pool_u, pool_v)
+  def get_config(sf):
+    my_config = super(complex_avg_pool_2d, sf).get_config()
+    my_config['activation__'] = sf.activation
+    return my_config

@@ -6,8 +6,8 @@ import my_notebook_modules as mynbm
 def tanh_computation(x__, A__, k__, b__):
   return tfm.tanh(A__* x__ + b__)
 
-@tf.function
 def complex_tanh(A__, k__, b__):
+  @tf.function
   def core_opt(inputs__):
     aR, aJ = mynbm.layers.utils.disintegrate_complex(inputs__)
     bR = tanh_computation(aR, A__, k__, b__)
