@@ -23,7 +23,7 @@ def trainer(model__, train_dataset__, opt__, batch_size__, epoch__):
         y = tf.expand_dims(train_dataset['dist'], axis=0)
         
         # calculating the loss
-        loss = mynbm.model.epicenter.mse(y_hat, y)
+        loss = mynbm.model.epicenter.rmse(y_hat, y)
 
         # apply gradient descent to update weights
         grad = g.gradient(loss, model__.trainable_variables)

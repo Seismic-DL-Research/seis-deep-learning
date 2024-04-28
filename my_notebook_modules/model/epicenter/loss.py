@@ -11,6 +11,6 @@ def rmse(y_hat, y):
   diff_square = tfm.square(y_hat - y)
   mean = tfm.reduce_mean(diff_square, axis=0)
   rmse = tfm.sqrt(mean)[0]
-  return [0]
+  return rmse
 
 # can add more loss function
