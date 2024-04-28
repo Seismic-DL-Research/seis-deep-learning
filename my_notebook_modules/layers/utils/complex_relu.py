@@ -10,11 +10,11 @@ def relu_computation(x__):
 @tf.function
 def complex_relu(inputs__):
   # ar, aJ: N x H x W x C
-  aR, aJ = mynbm.layers.disintegrate_complex(inputs__)
+  aR, aJ = mynbm.layers.utils.disintegrate_complex(inputs__)
   bR = relu_computation(aR)
   bJ = relu_computation(aJ)
 
-  end_tensor = mynbm.layers.integrate_complex(bR, bJ)
+  end_tensor = mynbm.layers.utils.integrate_complex(bR, bJ)
   return end_tensor
 
   

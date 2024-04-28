@@ -6,7 +6,9 @@ import my_notebook_modules as mynbm
     name="complex_avg_pool_2d"
 )
 class complex_avg_pool_2d(tf.keras.layers.Layer):
-  def __init__(sf, pool_size__, name__='Complex Avg Pool 2D'):
+  def __init__(sf, pool_size__, name__=None):
+    if name__ == None:
+      name__ = mynbm.layers.utils.random_name('cap2d', name__)
     super(complex_avg_pool_2d, sf).__init__(name=name__)
     sf.pool_size = pool_size__
     sf.universal_strides = [1,1,1,1]
@@ -15,7 +17,7 @@ class complex_avg_pool_2d(tf.keras.layers.Layer):
     pass
 
   def call(sf, inputs__):
-    u, v = mynbm.layers.disintegrate_complex(inputs__)
+    u, v = mynbm.layers.utils.disintegrate_complex(inputs__)
     
     pool_u = tf.nn.avg_pool2d(
         input=u, ksize=sf.pool_size,
@@ -28,4 +30,4 @@ class complex_avg_pool_2d(tf.keras.layers.Layer):
         padding='VALID'
     )
 
-    return mynbm.layers.integrate_complex(pool_u, pool_v)
+    return mynbm.layers.utils.integrate_complex(pool_u, pool_v)

@@ -1,5 +1,6 @@
 import tensorflow as tf
 import my_notebook_modules as mynbm
+import uuid
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
@@ -7,8 +8,9 @@ import my_notebook_modules as mynbm
 )
 class complex_conv_2d(tf.keras.layers.Layer):
   def __init__(sf, kernel_size__, kernel_total__,
-              activation__,
-               name__='Complex Convolution 2D'):
+              activation__, name__=None):
+    if name__ == None:
+      name__ = mynbm.layers.utils.random_name('cc2d', name__)
     super(complex_conv_2d, sf).__init__(name=name__)
     sf.kernel_size = kernel_size__
     sf.kernel_total = kernel_total__
@@ -32,7 +34,7 @@ class complex_conv_2d(tf.keras.layers.Layer):
     pass
 
   def call(sf, inputs__):
-    u, v = mynbm.layers.disintegrate_complex(inputs__)
+    u, v = mynbm.layers.utils.disintegrate_complex(inputs__)
     
     conv_up = tf.nn.conv2d(
         input=u, filters=sf.kernel_p,
@@ -59,5 +61,5 @@ class complex_conv_2d(tf.keras.layers.Layer):
     imag_conv = conv_uq + conv_vp
 
     # end_tensor: N x 2 x H x W x C
-    end_tensor = mynbm.layers.integrate_complex(real_conv, imag_conv)
+    end_tensor = mynbm.layers.utils.integrate_complex(real_conv, imag_conv)
     return sf.activation(end_tensor)

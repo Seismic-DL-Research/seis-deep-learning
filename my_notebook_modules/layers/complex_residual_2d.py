@@ -1,13 +1,16 @@
 import tensorflow as tf
 import tensorflow.linalg as tfl
 import my_notebook_modules as mynbm
+import uuid
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
     name="complex_residual_2d"
 )
 class complex_residual_2d(tf.keras.layers.Layer):
-  def __init__(sf, name__='Complex Residual 2D'):
+  def __init__(sf, name__=None):
+    if name__ == None:
+      name__ = mynbm.layers.utils.random_name('cr2d', name__)
     super(complex_residual_2d, sf).__init__(name=name__)
 
   def construct_matrix(sf, shape__, name__):
@@ -91,14 +94,9 @@ class complex_residual_2d(tf.keras.layers.Layer):
     sf.QR = sf.construct_matrix(Q_shape, 'Q_matrix_real')
     sf.QJ = sf.construct_matrix(Q_shape, 'Q_matrix_imag')
 
-  def make_pair(sf, a__, b__):
-    a = tf.expand_dims(a__, axis=1)
-    b = tf.expand_dims(b__, axis=1)
-    return tf.concat([a, b], axis=1)
-
   def call(sf, input__):
-    alphaR, alphaJ = mynbm.layers.disintegrate_complex(input__[1])
-    betaR, betaJ = mynbm.layers.disintegrate_complex(input__[0])
+    alphaR, alphaJ = mynbm.layers.utils.disintegrate_complex(input__[1])
+    betaR, betaJ = mynbm.layers.utils.disintegrate_complex(input__[0])
     alphaR = sf.to_nchw(alphaR)
     alphaJ = sf.to_nchw(alphaJ)
 
@@ -110,4 +108,4 @@ class complex_residual_2d(tf.keras.layers.Layer):
 
     PalphaQR = sf.to_nhwc(PalphaQR)
     PalphaQJ = sf.to_nhwc(PalphaQJ)
-    return mynbm.layers.integrate_complex(betaR + PalphaQR, betaJ + PalphaQJ)
+    return mynbm.layers.utils.integrate_complex(betaR + PalphaQR, betaJ + PalphaQJ)
