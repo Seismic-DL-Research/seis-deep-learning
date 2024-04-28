@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tqdm import tqdm
 
 def serialize(data__, dtype__):
   return tf.io.serialize_tensor(tf.convert_to_tensor(data__, dtype__))
@@ -54,9 +55,11 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
   keys, keys_type = get_keys_and_types(keys__)
   init_filename = (out_file__ if batches_per_file__ == -1 
                   else f'{".".join(out_file__.split(".")[:-1])}:0.tfr')
+  bar = tqdm(total=1, position=0, bar_format='[{elapsed}] {desc}')
   f = tf.io.TFRecordWriter(init_filename)
   batch_rounds = 0
 
+  bar.set_description_str(f'Initiating')
   for dsElement in ds__.batch(batch_size__).take(take_size__):
     # close the current file and open the new file if batches_per_file__ is
     # enabled (!=1).
@@ -75,8 +78,13 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
     record_bytes = tf.train.Example(features=collective).SerializeToString()
     f.write(record_bytes)
 
+    # update tqdm
+    bar.set_description_str(f'Batch Rounds: {batch_rounds}')
+
     # increase the batch_rounds number.
     batch_rounds += 1
+
+  bar.close()
 
   f.close()
 
