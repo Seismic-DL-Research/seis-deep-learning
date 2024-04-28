@@ -1,4 +1,5 @@
 from .complex_avg_pool_2d import complex_avg_pool_2d
+from .complex_max_pool_2d import complex_max_pool_2d
 from .complex_conv_2d import complex_conv_2d
 from .complex_residual_2d import complex_residual_2d
 from .complex_to_nhwc import complex_to_nhwc
