@@ -1,4 +1,5 @@
 import tensorflow as tf
+import my_notebook_modules as mynbm
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
@@ -34,8 +35,8 @@ class complex_conv_2d(tf.keras.layers.Layer):
     return tf.concat([a, b], axis=1)
 
   def call(sf, inputs__):
-    u = inputs__[:,0]
-    v = inputs__[:,1]
+    u, v = mynbm.layers.disintegrate_complex(inputs__)
+    
     conv_up = tf.nn.conv2d(
         input=u, filters=sf.kernel_p,
         strides=sf.universal_strides,
