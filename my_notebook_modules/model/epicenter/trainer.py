@@ -38,7 +38,7 @@ def trainer(model__, train_dataset__, opt__, batch_size__, epoch__):
       else:
         bar.update(1)
         bar.set_description_str(f'Batch {i}/{total_batch} | Loss: {loss:.4f}')
-      total_loss.append(loss)
-    print('Train Avg Loss: ', tfm.reduce_mean(tf.convert_to_tensor(loss)))
+      total_loss.append(float(loss))
+    print('Train Avg Loss: ', float(tfm.reduce_mean(tf.convert_to_tensor(total_loss))))
 
     bar.close()
