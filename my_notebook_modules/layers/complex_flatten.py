@@ -1,6 +1,5 @@
 import tensorflow as tf
 import my_notebook_modules as mynbm
-import uuid
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
@@ -17,9 +16,11 @@ class complex_flatten(tf.keras.layers.Layer):
 
   def call(sf, inputs__):
     aR, aJ = mynbm.layers.utils.disintegrate_complex(inputs__)
+    aR_shape = tf.shape(aR)
+    flattened_size = aR_shape[1] * aR_shape[2] * aR_shape[3]
+    aR = tf.reshape(aR, (tf.shape(aR)[0], flattened_size))
+    aJ = tf.reshape(aJ, (tf.shape(aJ)[0], flattened_size))
 
-    aR = tf.reshape(aR, (tf.shape(aR)[0], -1))
-    aJ = tf.reshape(aJ, (tf.shape(aJ)[0], -1))
 
     return mynbm.layers.utils.integrate_complex(aR, aJ)
   

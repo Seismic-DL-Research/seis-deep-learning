@@ -1,6 +1,5 @@
 import tensorflow as tf
 import my_notebook_modules as mynbm
-import uuid
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
