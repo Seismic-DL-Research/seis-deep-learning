@@ -1,12 +1,13 @@
 import tensorflow as tf
+import my_notebook_modules as mynbm
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
-    name="complex_conv_2d"
+    name="complex_relu"
 )
-class complex_conv_2d(tf.keras.layers.Layer):
+class complex_relu(tf.keras.layers.Layer):
   def __init__(sf, name__='Complex ReLU'):
-    super(complex_conv_2d, sf).__init__(name=name__)
+    super(complex_relu, sf).__init__(name=name__)
 
   def build(sf, input_shape__):
     pass
@@ -16,15 +17,10 @@ class complex_conv_2d(tf.keras.layers.Layer):
     zeros = tf.zeros((where_negative.shape[0],))
     return tf.tensor_scatter_nd_update(x__, where_negative, zeros)
 
-  def make_pair(sf, a__, b__):
-    a = tf.expand_dims(a__, axis=1)
-    b = tf.expand_dims(b__, axis=1)
-    return tf.concat([a, b], axis=1)
-
   def call(sf, inputs__):
-    aR = inputs__[:,0]
-    aJ = inputs__[:,1]
+    aR, aJ = mynbm.layers.disintegrate_complex(inputs__)
+
     bR = tf.expand_dims(sf.relu(aR), axis=1)
     bJ = tf.expand_dims(sf.relu(bJ), axis=1)
 
-    return 
+    return mynbm.layers.integrate_complex(bR, bJ)

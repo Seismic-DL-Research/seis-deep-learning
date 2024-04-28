@@ -1,4 +1,5 @@
 import tensorflow as tf
+import my_notebook_modules as mynbm
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
@@ -13,14 +14,9 @@ class complex_avg_pool_2d(tf.keras.layers.Layer):
   def build(sf, input_shape__):
     pass
 
-  def make_pair(sf, a__, b__):
-    a = tf.expand_dims(a__, axis=1)
-    b = tf.expand_dims(b__, axis=1)
-    return tf.concat([a, b], axis=1)
-
   def call(sf, inputs__):
-    u = inputs__[:,0]
-    v = inputs__[:,1]
+    u, v = mynbm.layers.disintegrate_complex(inputs__)
+    
     pool_u = tf.nn.avg_pool2d(
         input=u, ksize=sf.pool_size,
         strides=sf.universal_strides,
@@ -32,4 +28,4 @@ class complex_avg_pool_2d(tf.keras.layers.Layer):
         padding='VALID'
     )
 
-    return sf.make_pair(pool_u, pool_v)
+    return mynbm.layers.integrate_complex(pool_u, pool_v)

@@ -1,5 +1,6 @@
 import tensorflow as tf
 import tensorflow.linalg as tfl
+import my_notebook_modules as mynbm
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
@@ -96,11 +97,10 @@ class complex_residual_2d(tf.keras.layers.Layer):
     return tf.concat([a, b], axis=1)
 
   def call(sf, input__):
-    # input__: (tuple:alpha, tuple:beta)
-    alphaR = sf.to_nchw(input__[1][:,0])
-    alphaJ = sf.to_nchw(input__[1][:,1])
-    betaR = input__[0][:,0]
-    betaJ = input__[0][:,1]
+    alphaR, alphaJ = mynbm.layers.disintegrate_complex(input__[1])
+    betaR, betaJ = mynbm.layers.disintegrate_complex(input__[0])
+    alphaR = sf.to_nchw(alphaR)
+    alphaJ = sf.to_nchw(alphaJ)
 
     u = sf.consecutive_matmul([(alphaR, sf.QR), (-1 * alphaJ, sf.QJ)])
     v = sf.consecutive_matmul([(alphaR, sf.QJ), (alphaJ, sf.QR)])
@@ -110,4 +110,4 @@ class complex_residual_2d(tf.keras.layers.Layer):
 
     PalphaQR = sf.to_nhwc(PalphaQR)
     PalphaQJ = sf.to_nhwc(PalphaQJ)
-    return sf.make_pair(betaR + PalphaQR, betaJ + PalphaQJ)
+    return mynbm.layers.integrate_complex(betaR + PalphaQR, betaJ + PalphaQJ)
