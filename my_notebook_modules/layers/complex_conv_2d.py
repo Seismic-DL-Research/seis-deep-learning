@@ -8,10 +8,9 @@ import uuid
 )
 class complex_conv_2d(tf.keras.layers.Layer):
   def __init__(sf, kernel_size__, kernel_total__,
-              activation__, name__=None):
-    if name__ == None:
-      name__ = mynbm.layers.utils.random_name('cc2d', name__)
-    super(complex_conv_2d, sf).__init__(name=name__)
+              activation__):
+    layer_name = mynbm.layers.utils.random_name('cc2d').numpy().decode('utf-8')
+    super(complex_conv_2d, sf).__init__(name=layer_name)
     sf.kernel_size = kernel_size__
     sf.kernel_total = kernel_total__
     sf.activation = activation__
@@ -63,3 +62,9 @@ class complex_conv_2d(tf.keras.layers.Layer):
     # end_tensor: N x 2 x H x W x C
     end_tensor = mynbm.layers.utils.integrate_complex(real_conv, imag_conv)
     return sf.activation(end_tensor)
+    
+  def get_config(sf):
+    my_config = super(complex_conv_2d, sf).get_config()
+    my_config['activation__'] = sf.activation
+    return my_config
+    

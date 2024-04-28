@@ -1,5 +1,6 @@
 import tensorflow as tf
 import my_notebook_modules as mynbm
+import uuid
 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-cvnn",
@@ -7,9 +8,8 @@ import my_notebook_modules as mynbm
 )
 class complex_avg_pool_2d(tf.keras.layers.Layer):
   def __init__(sf, pool_size__, name__=None):
-    if name__ == None:
-      name__ = mynbm.layers.utils.random_name('cap2d', name__)
-    super(complex_avg_pool_2d, sf).__init__(name=name__)
+    layer_name = mynbm.layers.utils.random_name('cap2d').numpy().decode('utf-8')
+    super(complex_avg_pool_2d, sf).__init__(name=layer_name)
     sf.pool_size = pool_size__
     sf.universal_strides = [1,1,1,1]
 

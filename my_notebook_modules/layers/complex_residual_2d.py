@@ -8,10 +8,9 @@ import uuid
     name="complex_residual_2d"
 )
 class complex_residual_2d(tf.keras.layers.Layer):
-  def __init__(sf, name__=None):
-    if name__ == None:
-      name__ = mynbm.layers.utils.random_name('cr2d', name__)
-    super(complex_residual_2d, sf).__init__(name=name__)
+  def __init__(sf):
+    layer_name = mynbm.layers.utils.random_name('cr2d').numpy().decode('utf-8')
+    super(complex_residual_2d, sf).__init__(name=layer_name)
 
   def construct_matrix(sf, shape__, name__):
     '''
