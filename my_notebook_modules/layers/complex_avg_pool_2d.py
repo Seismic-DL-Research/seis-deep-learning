@@ -5,8 +5,8 @@ import tensorflow as tf
     name="complex_avg_pool_2d"
 )
 class complex_avg_pool_2d(tf.keras.layers.Layer):
-  def __init__(sf, pool_size__):
-    super(complex_avg_pool_2d, sf).__init__()
+  def __init__(sf, pool_size__, name__='Complex Avg Pool 2D'):
+    super(complex_avg_pool_2d, sf).__init__(name=name__)
     sf.pool_size = pool_size__
     sf.universal_strides = [1,1,1,1]
 

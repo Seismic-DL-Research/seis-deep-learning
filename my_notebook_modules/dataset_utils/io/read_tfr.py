@@ -12,13 +12,13 @@ def get_keys_and_types(keys__):
   return keys, keys_type
 
 @tf.autograph.experimental.do_not_convert
-def read_tfr(inFile__, keys__):
+def read_tfr(in_file__, keys__):
   '''
     read_tfr:
       * used to read tensorflow binary record files.
 
     receive:
-      * in_File__ <string/list> [0]
+      * in_file__ <string/list> [0]
         a string/list containing the path to the tensorflow binary record file(s).
       * keys__ <list> [?]
         a list of keys and their data type that is present in the binary file(s).
@@ -47,4 +47,4 @@ def read_tfr(inFile__, keys__):
         for i, key in enumerate(keys)
     }
     return (dataStructure)
-  return tf.data.TFRecordDataset(inFile__).map(decoder)
+  return tf.data.TFRecordDataset(in_file__).map(decoder)
