@@ -7,7 +7,7 @@ import my_notebook_modules as mynbm
 )
 class complex_conv_2d(tf.keras.layers.Layer):
   def __init__(sf, kernel_size__, kernel_total__,
-              activation__):
+              activation__=None):
     layer_type = tf.constant('cc2d', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
     super(complex_conv_2d, sf).__init__(name=layer_name.numpy().decode('utf-8'))

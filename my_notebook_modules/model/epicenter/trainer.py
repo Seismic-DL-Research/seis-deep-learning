@@ -16,12 +16,7 @@ def trainer(model__, train_dataset__, opt__, batch_size__, epoch__):
     for i, train_dataset in enumerate(train_dataset__.shuffle(100).batch(batch_size__).take(-1)):
       with tf.GradientTape() as g:
         # get model's epicentral distance estimation values
-        data = train_dataset['data'][:,:,:,:50,:]
-        max_val = tf.reduce_max(data, axis=-1)
-        max_val = tf.reduce_max(max_val, axis=-1)
-        max_val = tf.expand_dims(max_val, axis=-1)
-        max_val = tf.expand_dims(max_val, axis=-1)
-        data = data/max_val
+        data = tf.abs(train_dataset['data'])
         y_hat = model__(data)
         y = tf.expand_dims(train_dataset['dist'] / 100.0, axis=0)
         
