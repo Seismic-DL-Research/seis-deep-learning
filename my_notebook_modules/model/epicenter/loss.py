@@ -9,7 +9,7 @@ def mae(y_hat, y):
 
 def rmse(y_hat, y):
   diff_square = tfm.square(y_hat - y)
-  mean = tfm.reduce_mean(diff_square, axis=0)
+  mean = tfm.reduce_mean(diff_square + 1e-5, axis=0)
   rmse = tfm.sqrt(mean)[0]
   return rmse
 

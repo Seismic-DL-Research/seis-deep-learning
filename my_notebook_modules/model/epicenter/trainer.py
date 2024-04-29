@@ -3,7 +3,7 @@ import tensorflow.math as tfm
 import my_notebook_modules as mynbm
 from tqdm import tqdm
 
-def trainer(model__, train_dataset__, opt__, batch_size__, epoch__):
+def trainer(model__, train_dataset__, opt__, batch_size__, epoch__, take_num__):
   total_batch = 0
 
   for epoch in range(1, epoch__ + 1):
@@ -13,7 +13,7 @@ def trainer(model__, train_dataset__, opt__, batch_size__, epoch__):
     bar = tqdm(total=total, ascii='_█', position=0,
                bar_format='|{bar:30}| [{elapsed}<{remaining}] {desc}')
 
-    for i, train_dataset in enumerate(train_dataset__.shuffle(100).batch(batch_size__).take(-1)):
+    for i, train_dataset in enumerate(train_dataset__.batch(batch_size__).take(take_num__)):
       with tf.GradientTape() as g:
         # get model's epicentral distance estimation values
         data = tf.abs(train_dataset['data'])
