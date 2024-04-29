@@ -17,8 +17,9 @@ def stft_process(x, nperseg__, noverlap__):
 
 @tf.py_function(Tout=tf.float32)
 def consec_reduce_max(data__, n__):
+  n = int(n__)
   data = data__
-  for i in range(1, n__+1):
+  for i in range(1, n+1):
     data = tf.reduce_max(data, axis=-i, keepdims=True)
   return data
 
@@ -31,10 +32,12 @@ def consec_reduce_max(data__, n__):
 
 @tf.py_function(Tout=tf.float32)
 def get_maxavg(data__):
-  maxv = consec_reduce_max(data__, 3)[0,0,0]
+  maxv = consec_reduce_max(data__, tf.constant(3))[0,0,0]
   avgv = tfm.reduce_mean(tf.reshape(data__, shape=(-1,)))
-  return tf.concat([maxv, avgv], axis=0)
+  return tf.convert_to_tensor([maxv, avgv])
 
 @tf.py_function(Tout=tf.float32)
 def get_imag_real_part(data__):
-  return tf.concat([data__[:,0], data__[:,1]], axis=0)
+  data0 = tf.expand_dims(data__[:,0], axis=0)
+  data1 = tf.expand_dims(data__[:,1], axis=0)
+  return tf.concat([data0, data1], axis=0)
