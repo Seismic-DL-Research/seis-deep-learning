@@ -1,6 +1,6 @@
 import tensorflow as tf
 import tensorflow.math as tfm
-from scipy.signal import stft
+import my_notebook_modules as mynbm
 
 def mapFunc_normalize(x):
   maxVal = tf.expand_dims(tfm.reduce_max(x['data'], axis=-1), axis=-1)
@@ -25,13 +25,8 @@ def mapFunc_clip(a, b):
 # using tf.py_function as a symbolic tensor can't be loaded
 # and processed further directly by tf.strings.split
 
-@tf.py_function(Tout=tf.int32)
-def get_year(x):
-  year = int(tf.strings.split(input=x, sep='-')[0])
-  return year
-
 def imprudent_mapFunc_add_year(x):
-  year = get_year(x['start'])
+  year = mynbm.dataset_utils.op.get_year(x['start'])
   x['year'] = year
   return x
 
@@ -45,18 +40,26 @@ def filterFunc_split_by_year(condition, splitAt):
       return x
   return core_opt
 
-@tf.py_function(Tout=tf.float32)
-def stft_process(x, nperseg__, noverlap__):
-  f, t, Z = stft(x, fs=100, nperseg=nperseg__, noverlap=noverlap__)
-  ZR = tf.expand_dims(tfm.real(Z), axis=1)
-  ZJ = tf.expand_dims(tfm.imag(Z), axis=1)
-  Z = tf.concat([ZR, ZJ], axis=1)
-  return Z
-
-def mapFunc_stft(nperseg__, noverlap__):
+def mapFunc_stft(nperseg__, noverlap__, clip_freq_index__):
   def core_opt(x):
-    Z = stft_process(x['data'], nperseg__, noverlap__)
-    x['data'] = Z
+    Z = mynbm.dataset_utils.op.stft_process(x['data'], nperseg__, noverlap__)
+    x['data'] = Z[:,:,:clip_freq_index__,:]
     return x
   return core_opt
 
+def filterFunc_reject_outliers(max__, avg__):
+  def core_opt(x):
+    real_part = x[:,0]
+    imag_part = x[:,1]
+    
+    # real part test
+    maxv, avgv = mynbm.dataset_utils.op.get_maxavg(real_part)
+    if maxv[0,0,0] > max__: return False
+    if avgv > avg__: return False
+
+    # max part test
+    maxv, avgv = mynbm.dataset_utils.op.get_maxavg(real_part)
+    if maxv[0,0,0] > max__: return False
+    if avgv > avg__: return False
+    return True
+  return core_opt
