@@ -39,7 +39,10 @@ class complex_batch_norm_2d(tf.keras.layers.Layer):
     aR_std = tf.expand_dims(aR_std, axis=-1)
     aJ_std = tf.expand_dims(aJ_std, axis=-1)
 
+    aR_nchw = (aR_nchw - aR_mean) / aR_std
+    aJ_nchw = (aJ_nchw - aJ_mean) / aJ_std
 
+    end_tensor = mynbm.layers.utils.integrate_complex(aR_nchw, aJ_nchw)
 
     if sf.activation == None: return end_tensor
     return sf.activation(end_tensor)

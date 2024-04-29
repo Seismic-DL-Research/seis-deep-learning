@@ -25,7 +25,7 @@ class complex_residual_2d(tf.keras.layers.Layer):
     '''
     matrix = sf.add_weight(
         shape=shape__,
-        initializer=tf.keras.initializers.GlorotNormal(),
+        initializer=tf.keras.initializers.GlorotUniform(),
         trainable=True,
         name=name__
     )
