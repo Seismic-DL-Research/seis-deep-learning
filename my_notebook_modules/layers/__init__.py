@@ -6,4 +6,5 @@ from .complex_to_nhwc import complex_to_nhwc
 from .complex_flatten import complex_flatten
 from .complex_dense import complex_dense
 from .complex_conjugate import complex_conjugate
+from .complex_batch_norm_2d import complex_batch_norm_2d
 from . import utils
