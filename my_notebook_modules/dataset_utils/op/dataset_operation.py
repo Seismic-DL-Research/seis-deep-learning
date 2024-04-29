@@ -49,17 +49,22 @@ def mapFunc_stft(nperseg__, noverlap__, clip_freq_index__):
 
 def filterFunc_reject_outliers(max__, avg__):
   def core_opt(x):
-    real_part = x[:,0]
-    imag_part = x[:,1]
+    real_imag = mynbm.dataset_utils.op.get_imag_real_part(x['data'])
+    real_part = real_imag[0]
+    imag_part = real_imag[1]
     
     # real part test
-    maxv, avgv = mynbm.dataset_utils.op.get_maxavg(real_part)
-    if maxv[0,0,0] > max__: return False
+    maxavg = mynbm.dataset_utils.op.get_maxavg(real_part)
+    maxv = maxavg[0]
+    avgv = maxavg[1]
+    if maxv > max__: return False
     if avgv > avg__: return False
 
-    # max part test
-    maxv, avgv = mynbm.dataset_utils.op.get_maxavg(real_part)
-    if maxv[0,0,0] > max__: return False
+    # imag part test
+    maxavg = mynbm.dataset_utils.op.get_maxavg(imag_part)
+    maxv = maxavg[0]
+    avgv = maxavg[1]
+    if maxv > max__: return False
     if avgv > avg__: return False
     return True
   return core_opt
