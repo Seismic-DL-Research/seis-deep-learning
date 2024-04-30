@@ -3,7 +3,7 @@ import tensorflow.math as tfm
 import my_notebook_modules as mynbm
 
 def write_and_analyze(ds__, out_file__, batch_size__, 
-                      take_size__, cum_batch__, keys__)
+                      take_size__, cum_batch__, keys__):
   cums = [[], [], [], [], []]
   analysis_matrix = [[], [], [], []]
   cum_data = [[] for _ in keys__]
@@ -37,3 +37,5 @@ def write_and_analyze(ds__, out_file__, batch_size__,
   mynbm.dataset.utils.io.write_tfr_from_list(analysis_matrix,
                                             ['analysis.f32'],
                                              out_file__ + '-analysis.tfr')
+
+  return tf.convert_to_tensor(analysis_matrix[0])
