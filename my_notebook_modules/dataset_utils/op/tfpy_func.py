@@ -10,9 +10,9 @@ def get_year(x):
 @tf.py_function(Tout=tf.float32)
 def stft_process(x, nperseg__, noverlap__):
   f, t, Z = stft(x, fs=100, nperseg=nperseg__, noverlap=noverlap__)
-  ZR = tf.expand_dims(tfm.real(Z), axis=1)
-  ZJ = tf.expand_dims(tfm.imag(Z), axis=1)
-  Z = tf.concat([ZR, ZJ], axis=1)
+  ZR = tf.expand_dims(tfm.real(Z), axis=0)
+  ZJ = tf.expand_dims(tfm.imag(Z), axis=0)
+  Z = tf.concat([ZR, ZJ], axis=0)
   return Z
 
 @tf.py_function(Tout=tf.float32)

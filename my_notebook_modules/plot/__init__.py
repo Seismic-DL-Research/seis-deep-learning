@@ -1,1 +1,0 @@
-from .get_metadata import get_metadata
