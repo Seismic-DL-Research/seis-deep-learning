@@ -49,9 +49,12 @@ def write_and_analyze(ds__, out_file__, batch_size__,
     analysis_matrix[i].append(tfm.reduce_mean(my_cum, axis=1))
     analysis_matrix[i].append(tfm.reduce_std(my_cum, axis=1))
     
-  analysis_matrix = [analysis_matrix, cums[-1]]
+  analysis_matrix = [analysis_matrix, cums[0], cums[1], cums[2], 
+                     cums[3], cums[4]]
   mynbm.dataset_utils.io.write_tfr_from_list(analysis_matrix,
-                                            ['analysis.f32', 'dist.f32'],
+                                            ['analysis.f32', 'min.f32',
+                                            'max.f32', 'avg.f32', 'std.f32',
+                                            'dist.f32'],
                                              out_file__ + '-analysis.tfr')
   bar.close()
   return tf.convert_to_tensor(analysis_matrix[0])
