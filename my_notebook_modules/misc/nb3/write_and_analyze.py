@@ -9,8 +9,7 @@ def write_and_analyze(ds__, out_file__, batch_size__,
   cum_data = [0 for _ in keys__]
   cum_batch = 0
   write_incidents = 0
-  for m, data_elem in enumerate(ds__.batch(batch_size__, 
-                                                     drop_remainder=True)
+  for m, data_elem in enumerate(ds__.batch(batch_size__, drop_remainder=True)
                                 .take(take_size__)):
     for i, stat in enumerate(mynbm.misc.nb3.get_stat(data_elem['data'])): 
       cums[i].append(stat)
@@ -26,10 +25,17 @@ def write_and_analyze(ds__, out_file__, batch_size__,
 
     if cum_batch %  cum_batch__ == 0:
       write_incidents += 1
-      mynbm.dataset_utils.io.write_tfr_from_list(cum_data, 
-                                                 keys__, 
-                                                 out_file__ + f'{write_incidents}.tfr')
+      mynbm.dataset_utils.io.write_tfr_from_list(
+        cum_data, 
+        keys__, 
+        out_file__ + f'-{write_incidents}.tfr')
       cum_data = [0 for _ in keys__]
+  #  
+  if (type(cum_data[0]) != int):
+    mynbm.dataset_utils.io.write_tfr_from_list(
+      cum_data, 
+      keys__, 
+      out_file__ + f'-{write_incidents}.tfr')
 
   for i, cum in enumerate(cums[:-1]):
     my_cum = tf.convert_to_tensor(cum)
