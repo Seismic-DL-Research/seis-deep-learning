@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import tensorflow.math as tfm
+import tensorflow as tf
 import seaborn as sns
 import numpy as np
 import scipy
@@ -38,11 +39,12 @@ def distance_dist(distances__, bins__):
   x = np.arange(0, 300, .1)
   xtick = np.arange(0, 300, 25)
   ax[0].set_title('Histogram')
-  ax[0].hist(distances__, bins=bins__, color='black')
+  hist_data = ax[0].hist(distances__, bins=bins__, color='black')
   ax[0].set_ylabel('Frequency')
 
   max_dist = tfm.reduce_max(distances__)
   min_dist = tfm.reduce_min(distances__)
+  avg_dist = tfm.reduce_mean(distances__)
   h_length = (max_dist - min_dist) / bins__
 
   text_info = f'Max Distance: {max_dist:.2f} km\n'
@@ -56,12 +58,13 @@ def distance_dist(distances__, bins__):
   ax[0].set_xlabel('Distances')
   ax[0].set_xticks(xtick)
   ax[1].plot(x, b(x), color='black', label='KDE graph of distance distribution')
-  ax[1].axvline(tfm.reduce_mean(distances__), color='red', label='Mean')
+  ax[1].axvline(avg_dist, color='red', label=f'Mean ({avg_dist:.2f} km)')
   ax[1].set_ylabel('Density')
   ax[1].set_xlabel('Distances')
   ax[1].legend()
 
   plt.show()
+  return hist_data
 
 def real_imag_min_max(stats__):
   f, ax = plt.subplots(ncols=2, figsize=(12,5))
@@ -81,3 +84,16 @@ def real_imag_min_max(stats__):
   ax[1].hist(stats__['min'][1,:], bins=250, color='blue', label='min dist.')
   ax[1].legend()
   plt.show()
+
+'''
+  call this function to analyze the uniformity of our data.
+  Will filter the histogram that has GREATER value than
+  threshold__ - tolerance__
+'''
+def hypothetically_uniformed(histo_freqs__, histo_length__, 
+                             threshold__, tolerance__):
+  cond = histo_freqs__ > (threshold__ - tolerance__)
+  where_cond = tf.where(cond)
+  bot_range = float(where_cond[0,0]) * histo_length__     # in km
+  top_range = float(where_cond[-1,0]) * histo_length__    # in km
+  
