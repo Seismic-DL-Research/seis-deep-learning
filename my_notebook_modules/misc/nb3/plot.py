@@ -64,7 +64,7 @@ def distance_dist(distances__, bins__):
   ax[1].legend()
 
   plt.show()
-  return hist_data
+  return hist_data, h_length
 
 def real_imag_min_max(stats__):
   f, ax = plt.subplots(ncols=2, figsize=(12,5))
@@ -99,6 +99,7 @@ def hypothetically_uniformed(histo_freqs__, histo_length__,
   total_data = tf.shape(where_cond)[0] * threshold__
   if print_me__:
     print(f'Total Uniformed Data: {total_data}')
-    print(f'Bottom range: {bot_range}')
-    print(f'Upper range: {top_range}')
+    print(f'Bottom range: {bot_range:.2f} km')
+    print(f'Upper range: {top_range:.2f} km')
+    return
   return bot_range, top_range, total_data
