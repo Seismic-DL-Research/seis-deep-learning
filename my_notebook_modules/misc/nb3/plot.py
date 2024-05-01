@@ -91,9 +91,14 @@ def real_imag_min_max(stats__):
   threshold__ - tolerance__
 '''
 def hypothetically_uniformed(histo_freqs__, histo_length__, 
-                             threshold__, tolerance__):
+                             threshold__, tolerance__, print_me__=False):
   cond = histo_freqs__ > (threshold__ - tolerance__)
   where_cond = tf.where(cond)
   bot_range = float(where_cond[0,0]) * histo_length__     # in km
   top_range = float(where_cond[-1,0]) * histo_length__    # in km
-  
+  total_data = tf.shape(where_cond)[0] * threshold__
+  if print_me__:
+    print(f'Total Uniformed Data: {total_data}')
+    print(f'Bottom range: {bot_range}')
+    print(f'Upper range: {top_range}')
+  return bot_range, top_range, total_data
