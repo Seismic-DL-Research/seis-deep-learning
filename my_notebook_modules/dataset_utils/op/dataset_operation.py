@@ -40,9 +40,10 @@ def filterFunc_split_by_year(condition, splitAt):
       return x
   return core_opt
 
-def mapFunc_stft(nperseg__, noverlap__, clip_freq_index__):
+def mapFunc_stft(nperseg__, noverlap__, window__, clip_freq_index__):
   def core_opt(x):
-    Z = mynbm.dataset_utils.op.stft_process(x['data'], nperseg__, noverlap__)
+    Z = mynbm.dataset_utils.op.stft_process(x['data'], nperseg__, noverlap__,
+                                            window__)
     x['data'] = Z[:,:,:clip_freq_index__,:]
     return x
   return core_opt
