@@ -34,13 +34,10 @@ def consec_reduce_min(data__, n__):
   return data
 
 @tf.py_function(Tout=tf.float32)
-def get_maxavg(data__):
-  maxv = consec_reduce_max(data__, tf.constant(3))[0,0,0]
-  avgv = tfm.reduce_mean(tf.reshape(data__, shape=(-1,)))
-  return tf.convert_to_tensor([maxv, avgv])
+def get_minmax(data__):
+  # data: 2 x 3 x 50 x 51
+  minv = consec_reduce_min(data__, 3)[:,0,0,0]
+  maxv = consec_reduce_max(data__, 3)[:,0,0,0]
 
-@tf.py_function(Tout=tf.float32)
-def get_imag_real_part(data__):
-  data0 = tf.expand_dims(data__[:,0], axis=0)
-  data1 = tf.expand_dims(data__[:,1], axis=0)
-  return tf.concat([data0, data1], axis=0)
+  # minv/maxv: 2
+  return tf.convert_to_tensor([minv, maxv])

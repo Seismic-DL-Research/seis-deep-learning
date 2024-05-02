@@ -16,6 +16,12 @@ def filterFunc_metadata(aavg_ratio, dist, magn):
         x['magn'] > magn)
   return core_opt
 
+def filterFunc_specific_key_range(bot_range__, top_range__, key__):
+  def core_opt(x):
+    return tfm.logical_and(x[key__] > bot_range__,
+                           x[key__] < top_range__)
+  return core_opt
+
 def mapFunc_clip(a, b):
   def core_opt(x):
     x['data'] = x['data'][:,a:b]
@@ -48,24 +54,12 @@ def mapFunc_stft(nperseg__, noverlap__, window__, clip_freq_index__):
     return x
   return core_opt
 
-def filterFunc_reject_outliers(max__, avg__):
+def filterFunc_reject_outliers(bot_range__, top_range__):
   def core_opt(x):
-    real_imag = mynbm.dataset_utils.op.get_imag_real_part(tf.abs(x['data']))
-    real_part = real_imag[0]
-    imag_part = real_imag[1]
-    
-    # real part test
-    maxavg = mynbm.dataset_utils.op.get_maxavg(real_part)
-    maxv = maxavg[0]
-    avgv = maxavg[1]
-    if maxv > max__: return False
-    if avgv > avg__: return False
-
-    # imag part test
-    maxavg = mynbm.dataset_utils.op.get_maxavg(imag_part)
-    maxv = maxavg[0]
-    avgv = maxavg[1]
-    if maxv > max__: return False
-    if avgv > avg__: return False
-    return True
+    minmax = mynbm.dataset_utils.op.tfpy_func.get_minmax(x['data'])
+    minv = minmax[0]
+    maxv = minmax[1]
+    cond_real = tfm.logical_and(minv[0] > bot_range__, maxv[0] < top_range__)
+    cond_imag = tfm.logical_and(minv[1] > bot_range__, maxv[1] < top_range__)
+    return tfm.logical_and(cond_real, cond_imag)
   return core_opt
