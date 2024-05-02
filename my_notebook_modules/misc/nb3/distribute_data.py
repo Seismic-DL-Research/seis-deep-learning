@@ -4,7 +4,6 @@ import my_notebook_modules.dataset_utils.op.dataset_operation as mynbm_dsop
 
 def distribute_data(dataset__, dataset_keys__, take_size__, batches_per_file__,
                     hist__, hist_length__, key__, threshold__, tolerance__):
-  curr_val = 0
   frequencies, bins = hist__
   
   for i in range(0, len(bins)-2):
