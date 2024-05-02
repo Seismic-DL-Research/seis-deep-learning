@@ -19,16 +19,28 @@ class complex_conv_2d(tf.keras.layers.Layer):
   def build(sf, input_shape__):
     # input shape: N x 2 x H x W x C
     sf.kernel_p = sf.add_weight(
-          shape=sf.kernel_size + (input_shape__[-1], sf.kernel_total),
-          initializer=tf.keras.initializers.HeNormal(),
-          trainable=True,
-          name='kernel_p'
+        shape=sf.kernel_size + (input_shape__[-1], sf.kernel_total),
+        initializer=tf.keras.initializers.GlorotUniform(),
+        trainable=True,
+        name='kernel_p'
       )
     sf.kernel_q = sf.add_weight(
-          shape=sf.kernel_size + (input_shape__[-1], sf.kernel_total),
-          initializer=tf.keras.initializers.HeNormal(),
-          trainable=True,
-          name='kernel_q'
+        shape=sf.kernel_size + (input_shape__[-1], sf.kernel_total),
+        initializer=tf.keras.initializers.GlorotUniform(),
+        trainable=True,
+        name='kernel_q'
+      )
+    sf.bias_p = sf.add_weight(
+        shape=(sf.kernel_total,),
+        initializer=tf.keras.initializers.GlorotUniform(),
+        trainable=True,
+        name='bias_p'
+      )
+    sf.bias_q = sf.add_weight(
+        shape=(sf.kernel_total,),
+        initializer=tf.keras.initializers.GlorotUniform(),
+        trainable=True,
+        name='bias_q'
       )
     pass
 
@@ -56,8 +68,8 @@ class complex_conv_2d(tf.keras.layers.Layer):
         padding='VALID'
     )
 
-    real_conv = conv_up + conv_vq
-    imag_conv = conv_uq + conv_vp
+    real_conv = tf.nn.bias_add(conv_up, sf.bias_p) + tf.nn.bias_add(conv_vq, sf.bias_q)
+    imag_conv = tf.nn.bias_add(conv_uq, sf.bias_q) + tf.nn.bias_add(conv_vp, sf.bias_p)
 
     end_tensor = mynbm.layers.utils.integrate_complex(real_conv, imag_conv)
     if sf.activation == None: return end_tensor
