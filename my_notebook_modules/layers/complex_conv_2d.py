@@ -20,13 +20,13 @@ class complex_conv_2d(tf.keras.layers.Layer):
     # input shape: N x 2 x H x W x C
     sf.kernel_p = sf.add_weight(
           shape=sf.kernel_size + (input_shape__[-1], sf.kernel_total),
-          initializer=tf.keras.initializers.RandomNormal(),
+          initializer=tf.keras.initializers.HeNormal(),
           trainable=True,
           name='kernel_p'
       )
     sf.kernel_q = sf.add_weight(
           shape=sf.kernel_size + (input_shape__[-1], sf.kernel_total),
-          initializer=tf.keras.initializers.GlorotUniform(),
+          initializer=tf.keras.initializers.HeNormal(),
           trainable=True,
           name='kernel_q'
       )

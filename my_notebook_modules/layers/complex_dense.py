@@ -17,25 +17,25 @@ class complex_dense(tf.keras.layers.Layer):
     # input shape: N x 2 x D
     sf.WR = sf.add_weight(
           shape=(input_shape__[-1], sf.dense_unit),
-          initializer=tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05),
+          initializer=tf.keras.initializers.HeNormal(),
           trainable=True,
           name='complex_dense_QR'
       )
     sf.WJ = sf.add_weight(
           shape=(input_shape__[-1], sf.dense_unit),
-          initializer=tf.keras.initializers.GlorotUniform(),
+          initializer=tf.keras.initializers.HeNormal(),
           trainable=True,
           name='complex_dense_QJ'
       )
     sf.BR = sf.add_weight(
           shape=(1, sf.dense_unit),
-          initializer=tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.1),
+          initializer=tf.keras.initializers.HeNormal(),
           trainable=True,
           name='complex_dense_BR'
       )
     sf.BJ = sf.add_weight(
           shape=(1, sf.dense_unit),
-          initializer=tf.keras.initializers.GlorotUniform(),
+          initializer=tf.keras.initializers.HeNormal(),
           trainable=True,
           name='complex_dense_BJ'
       )

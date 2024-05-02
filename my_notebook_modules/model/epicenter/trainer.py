@@ -16,9 +16,9 @@ def trainer(model__, train_dataset__, opt__, batch_size__, epoch__, take_num__):
     for i, train_dataset in enumerate(train_dataset__.batch(batch_size__).take(take_num__)):
       with tf.GradientTape() as g:
         # get model's epicentral distance estimation values
-        data = tf.abs(train_dataset['data'])
+        data = train_dataset['data']
         y_hat = model__(data)
-        y = tf.expand_dims(train_dataset['dist'], axis=0)
+        y = tf.expand_dims(train_dataset['dist'] / 180, axis=0)
         
         # calculating the loss
         loss = mynbm.model.epicenter.mae(y_hat, y)
