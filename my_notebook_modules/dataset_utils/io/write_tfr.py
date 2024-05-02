@@ -59,7 +59,7 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
   f = tf.io.TFRecordWriter(init_filename)
   batch_rounds = 0
 
-  bar.set_description_str(f'Initiating')
+  bar.set_description_str(f'Initializing')
   for dsElement in ds__.batch(batch_size__).take(take_size__):
     # close the current file and open the new file if batches_per_file__ is
     # enabled (!=1).
@@ -67,7 +67,7 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
       f.close()
       f = tf.io.TFRecordWriter(
         f'{".".join(out_file__.split(".")[:-1])}:{int(batch_rounds/batches_per_file__)}.tfr')
-
+    
     collective = tf.train.Features(
         feature = {
             key: featurize(serialize(dsElement[key], keys_type[i]))

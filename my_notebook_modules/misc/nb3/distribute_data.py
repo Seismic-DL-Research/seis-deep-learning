@@ -9,6 +9,7 @@ def distribute_data(dataset__, dataset_keys__, take_size__,
   frequencies, bins = hist__[0], hist__[1]
   
   for i in range(0, len(bins)-2):
+    print(frequencies[i])
     if frequencies[i] < (threshold__ - tolerance__):
       continue
     uniformed_ds = dataset__.filter(mynbm_dsop.filterFunc_specific_key_range(
