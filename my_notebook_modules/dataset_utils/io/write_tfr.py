@@ -78,11 +78,13 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
     record_bytes = tf.train.Example(features=collective).SerializeToString()
     f.write(record_bytes)
 
+    # increase the batch_rounds number.
+    batch_rounds += 1
+
     # update tqdm
     bar.set_description_str(f'Batch Rounds: {batch_rounds}')
 
-    # increase the batch_rounds number.
-    batch_rounds += 1
+    
 
   bar.close()
 

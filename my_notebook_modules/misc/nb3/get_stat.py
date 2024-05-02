@@ -20,9 +20,8 @@ def get_stat(data__):
   # linearize
   # from N x 2 x 3 x H x W
   # to N x 2 x 1 x 1 x 1
-
   reshaped = tf.reshape(data__,
-                        shape=tuple(tf.shape(data__)[:2])+(1,))
+                        shape=tuple(tf.shape(data__)[:2])+(-1,))
 
   avg = tfm.reduce_mean(reshaped, axis=-1)
   std = tfm.reduce_std(reshaped, axis=-1)
