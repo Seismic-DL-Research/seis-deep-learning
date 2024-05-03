@@ -17,12 +17,15 @@ class complex_simple_residual(tf.keras.layers.Layer):
     pass
 
   def call(sf, input__):
-    alphaR, alphaJ = mynbm.layers.utils.disintegrate_complex(input__[1])
-    betaR, betaJ = mynbm.layers.utils.disintegrate_complex(input__[0])
+    # alphaR, alphaJ = mynbm.layers.utils.disintegrate_complex(input__[1])
+    # betaR, betaJ = mynbm.layers.utils.disintegrate_complex(input__[0])
 
-    R = alphaR + betaR
-    J = alphaJ + betaJ
-    end_tensor = mynbm.layers.utils.integrate_complex(R, J)
+    # R = alphaR + betaR
+    # J = alphaJ + betaJ
+    # end_tensor = mynbm.layers.utils.integrate_complex(R, J)
+
+    end_tensor = input__[0] + input__[1]
+    if sf.activation == None: return end_tensor
     return sf.activation(end_tensor)
 
   def get_config(sf):
