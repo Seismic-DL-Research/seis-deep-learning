@@ -6,11 +6,11 @@ import my_notebook_modules as mynbm
     package="thesis-cvnn",
     name="complex_residual_2d"
 )
-class complex_residual_2d(tf.keras.layers.Layer):
+class complex_simple_residual(tf.keras.layers.Layer):
   def __init__(sf, activation__=None):
     layer_type = tf.constant('cr2d', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
-    super(complex_residual_2d, sf).__init__(name=layer_name.numpy().decode('utf-8'))
+    super(complex_simple_residual, sf).__init__(name=layer_name.numpy().decode('utf-8'))
     sf.activation = activation__
 
   def build(sf, input_shape__):
@@ -26,6 +26,6 @@ class complex_residual_2d(tf.keras.layers.Layer):
     return sf.activation(end_tensor)
 
   def get_config(sf):
-    my_config = super(complex_residual_2d, sf).get_config()
+    my_config = super(complex_simple_residual, sf).get_config()
     my_config['activation__'] = sf.activation
     return my_config
