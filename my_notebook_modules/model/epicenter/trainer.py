@@ -37,7 +37,7 @@ def trainer(model__, train_dataset__, valid_dataset__, opt__, batch_size__, epoc
     val_losses = 0
     for i, valid_dataset in enumerate(valid_dataset__.batch(batch_size__).take(-1)):
       predicted = model__(valid_dataset['data'])
-      real = valid_dataset['data']
+      real = tf.expand_dims(valid_dataset['dist'] / 10, axis=0)
 
       val_loss = mynbm.model.epicenter.mae(predicted, real)
       val_losses += val_loss 
