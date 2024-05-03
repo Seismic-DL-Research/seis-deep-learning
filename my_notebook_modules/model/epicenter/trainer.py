@@ -12,6 +12,8 @@ def trainer(model__, train_dataset__, valid_dataset__, opt__, batch_size__, epoc
     print(f'\n\U0001f534 Epoch {epoch} out of {epoch__}')
     bar = tqdm(total=total, ascii='_█', position=0,
                bar_format='|{bar:30}| [{elapsed}<{remaining}] {desc}')
+               
+    tf.keras.backend.clear_session()
 
     for i, train_dataset in enumerate(train_dataset__.batch(batch_size__).take(take_num__)):
       with tf.GradientTape() as g:
