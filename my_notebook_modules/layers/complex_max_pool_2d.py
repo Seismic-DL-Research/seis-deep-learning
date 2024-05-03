@@ -6,13 +6,14 @@ import my_notebook_modules as mynbm
     name="complex_max_pool_2d"
 )
 class complex_max_pool_2d(tf.keras.layers.Layer):
-  def __init__(sf, pool_size__, activation__=None, name__=None):
+  def __init__(sf, pool_size__, padding__, activation__=None, name__=None):
     layer_type = tf.constant('cmp2d', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
     super(complex_max_pool_2d, sf).__init__(name=layer_name.numpy().decode('utf-8'))
     sf.pool_size = pool_size__
     sf.activation = activation__
     sf.universal_strides = [1,1,1,1]
+    sf.padding = padding__
 
   def build(sf, input_shape__):
     pass
@@ -23,12 +24,12 @@ class complex_max_pool_2d(tf.keras.layers.Layer):
     pool_u = tf.nn.max_pool2d(
         input=u, ksize=sf.pool_size,
         strides=sf.universal_strides,
-        padding='VALID'
+        padding=sf.padding
     )
     pool_v = tf.nn.max_pool2d(
         input=v, ksize=sf.pool_size,
         strides=sf.universal_strides,
-        padding='VALID'
+        padding=sf.padding
     )
     
     end_tensor = mynbm.layers.utils.integrate_complex(pool_u, pool_v)

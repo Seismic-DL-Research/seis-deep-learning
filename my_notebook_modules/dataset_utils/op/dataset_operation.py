@@ -46,11 +46,15 @@ def filterFunc_split_by_year(condition, splitAt):
       return x
   return core_opt
 
-def mapFunc_stft(nperseg__, noverlap__, window__, clip_freq_index__):
+def mapFunc_stft(nperseg__, noverlap__, window__, clip_freq_index__,
+                 clip_time_index__):
   def core_opt(x):
     Z = mynbm.dataset_utils.op.stft_process(x['data'], nperseg__, noverlap__,
                                             window__)
-    x['data'] = Z[:,:,:clip_freq_index__,:]
+    if clip_freq_index__ == 0:
+      x['data'] = Z[:,:,:,:clip_time_index__]
+    else:
+      x['data'] = Z[:,:,:clip_freq_index__,:clip_time_index__]
     return x
   return core_opt
 

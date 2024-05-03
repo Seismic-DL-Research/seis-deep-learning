@@ -6,7 +6,7 @@ import my_notebook_modules as mynbm
     name="complex_conv_2d"
 )
 class complex_conv_2d(tf.keras.layers.Layer):
-  def __init__(sf, kernel_size__, kernel_total__,
+  def __init__(sf, kernel_size__, kernel_total__, padding__='VALID',
               activation__=None):
     layer_type = tf.constant('cc2d', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
@@ -14,6 +14,7 @@ class complex_conv_2d(tf.keras.layers.Layer):
     sf.kernel_size = kernel_size__
     sf.kernel_total = kernel_total__
     sf.activation = activation__
+    sf.padding = padding__
     sf.universal_strides = [1,1,1,1]
 
   def build(sf, input_shape__):
@@ -50,22 +51,22 @@ class complex_conv_2d(tf.keras.layers.Layer):
     conv_up = tf.nn.conv2d(
         input=u, filters=sf.kernel_p,
         strides=sf.universal_strides,
-        padding='VALID'
+        padding=sf.padding
     )
     conv_vq = tf.nn.conv2d(
         input=v, filters=sf.kernel_q,
         strides=sf.universal_strides,
-        padding='VALID'
+        padding=sf.padding
     )
     conv_uq = tf.nn.conv2d(
         input=u, filters=sf.kernel_q,
         strides=sf.universal_strides,
-        padding='VALID'
+        padding=sf.padding
     )
     conv_vp = tf.nn.conv2d(
         input=v, filters=sf.kernel_p,
         strides=sf.universal_strides,
-        padding='VALID'
+        padding=sf.padding
     )
 
     real_conv = tf.nn.bias_add(conv_up, sf.bias_p) + tf.nn.bias_add(conv_vq, sf.bias_q)
