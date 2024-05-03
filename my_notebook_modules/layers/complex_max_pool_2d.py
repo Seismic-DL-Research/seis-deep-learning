@@ -12,7 +12,7 @@ class complex_max_pool_2d(tf.keras.layers.Layer):
     super(complex_max_pool_2d, sf).__init__(name=layer_name.numpy().decode('utf-8'))
     sf.pool_size = pool_size__
     sf.activation = activation__
-    sf.universal_strides = [1,1,1,1]
+    sf.universal_strides = [1,pool_size__[0],pool_size__[1],1]
     sf.padding = padding__
 
   def build(sf, input_shape__):
