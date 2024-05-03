@@ -3,7 +3,7 @@ import tensorflow.math as tfm
 import my_notebook_modules as mynbm
 from tqdm import tqdm
 
-def trainer(model__, train_dataset__, opt__, batch_size__, epoch__, take_num__):
+def trainer(model__, train_dataset__, valid_dataset__, opt__, batch_size__, epoch__, take_num__):
   total_batch = 0
 
   for epoch in range(1, epoch__ + 1):
@@ -33,6 +33,20 @@ def trainer(model__, train_dataset__, opt__, batch_size__, epoch__, take_num__):
       else:
         bar.update(1)
         bar.set_description_str(f'Batch {i}/{total_batch} | Loss: {loss:.4f}')
+    
+    val_losses = 0
+    for i, valid_dataset in enumerate(valid_dataset__.batch(batch_size__).take(-1)):
+      predicted = model__(valid_dataset['data'])
+      real = valid_dataset['data']
+
+      val_loss = mynbm.model.epicenter.mae(predicted, real)
+      val_losses += val_loss 
+
+    val_loss = val_losses / (i+1)
+    
+    print(f'Validation Loss: {val_loss:.4f}')
+
+
     #   total_loss.append(float(loss))
     # print('Train Avg Loss: ', float(tfm.reduce_mean(tf.convert_to_tensor(total_loss))))
 
