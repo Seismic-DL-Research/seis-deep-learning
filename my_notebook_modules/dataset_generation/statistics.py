@@ -10,8 +10,15 @@ def power(data__, w__):
 @njit(fastmath=True)
 def stalta(waveform_data__, preprocessed_data__,
                    nsta__, nlta__, stalta_trigger__,
-                   data_trigger__, normalize__=True):
-  cumsum = np.cumsum(np.abs(waveform_data__) ** 2)
+                   data_trigger__, normalize__=True, power_type__='power'):
+  if (power_type__=='power'):
+    cumsum = np.cumsum(np.abs(waveform_data__) ** 2)
+  if (power_type__ == 'nopower'):
+    cumsum = np.cumsum(waveform_data__)
+  if power_type__ == 'abs':
+    cumsum = np.cumsum(np.abs(waveform_data__))
+  else:
+    cumsum = np.cumsum(waveform_data__ * int(power_type__))
   sta = np.concatenate((cumsum[:nsta__],
                         cumsum[nsta__:] - cumsum[:-nsta__]))
   lta = np.concatenate((cumsum[:nlta__],
