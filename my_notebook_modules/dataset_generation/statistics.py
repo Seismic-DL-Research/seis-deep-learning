@@ -7,18 +7,19 @@ def power(data__, w__):
   power = np.concatenate((cumsum[w__:] - cumsum[:-w__], cumsum[:w__]))
   return power
 
-@njit(fastmath=True)
+#@njit(fastmath=True)
 def stalta(waveform_data__, preprocessed_data__,
                    nsta__, nlta__, stalta_trigger__,
                    data_trigger__, normalize__=True, power_type__='power'):
   if (power_type__=='power'):
+    print('here')
     cumsum = np.cumsum(np.abs(waveform_data__) ** 2)
   if (power_type__ == 'nopower'):
     cumsum = np.cumsum(waveform_data__)
   if power_type__ == 'abs':
     cumsum = np.cumsum(np.abs(waveform_data__))
-  else:
-    cumsum = np.cumsum(waveform_data__ * int(power_type__))
+  elif type(power_type__) == int:
+    cumsum = np.cumsum(waveform_data__ ** int(power_type__))
   sta = np.concatenate((cumsum[:nsta__],
                         cumsum[nsta__:] - cumsum[:-nsta__]))
   lta = np.concatenate((cumsum[:nlta__],
@@ -27,7 +28,7 @@ def stalta(waveform_data__, preprocessed_data__,
   stalta = sta/lta * (nlta__/nsta__)
   if normalize__: stalta /= np.max(stalta)
 
-  tp, avg_ratio, score = -1, -1, -1
+  tp, aavg_ratio, score = -1, -1, -1
 
   try:
     notable_data = np.argwhere(preprocessed_data__ > data_trigger__)[:,0]

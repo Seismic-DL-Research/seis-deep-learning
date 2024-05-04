@@ -6,14 +6,14 @@ def decisor(waveform__, power_windows__, nsta__, nlta__,
   tps, aavg_ratios, scores = [], [], []
   for power_window in power_windows__:
     powerData = mynbm.dataset_generation.power(waveform__, power_window)
-    
+
     _, tp, _, _, aavg_ratio, score = mynbm.dataset_generation.stalta(
         waveform__,
         powerData,
         nsta__,
         nlta__,
         trigger_threshold__,
-        data_threshold__)
+        data_threshold__, True, 4)
 
     tps.append(tp)
     aavg_ratios.append(aavg_ratio)
