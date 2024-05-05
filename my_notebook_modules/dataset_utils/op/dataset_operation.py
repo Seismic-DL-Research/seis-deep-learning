@@ -52,9 +52,9 @@ def mapFunc_stft(nperseg__, noverlap__, window__, clip_freq_index__,
     Z = mynbm.dataset_utils.op.stft_process(x['data'], nperseg__, noverlap__,
                                             window__)
     if clip_freq_index__ == 0:
-      x['data'] = Z[:,:,:clip_time_index__]
+      x['data'] = Z[:,:,:,:clip_time_index__]
     else:
-      x['data'] = Z[:,:clip_freq_index__,:clip_time_index__]
+      x['data'] = Z[:,:,:clip_freq_index__,:clip_time_index__]
     return x
   return core_opt
 
