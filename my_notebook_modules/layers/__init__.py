@@ -8,4 +8,5 @@ from .complex_dense import complex_dense
 from .complex_conjugate import complex_conjugate
 from .complex_batch_norm_2d import complex_batch_norm_2d
 from .complex_simple_residual import complex_simple_residual
+from .complex_conv_2d_transpose import complex_conv_2d_transpose
 from . import utils
