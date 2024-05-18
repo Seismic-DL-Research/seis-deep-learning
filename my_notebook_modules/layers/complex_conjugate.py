@@ -30,4 +30,6 @@ class complex_conjugate(tf.keras.layers.Layer):
     my_config = super(complex_conjugate, sf).get_config()
     my_config['activation__'] = sf.activation
     return my_config
+  
+  #test
     
