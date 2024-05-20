@@ -31,4 +31,6 @@ class complex_conjugate(tf.keras.layers.Layer):
     my_config['activation__'] = sf.activation
     return my_config
   
-  # from vs code (rebase)
+  
+  # from vs code (AMEND)
+  # .
