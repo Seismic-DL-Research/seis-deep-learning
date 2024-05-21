@@ -1,5 +1,5 @@
 import tensorflow as tf
-
+import os 
 @tf.keras.utils.register_keras_serializable(
     package="thesis-gan",
     name="ExtendDimension"
@@ -82,6 +82,7 @@ def INTERNAL_D():
 def gan1():
   gModel = INTERNAL_G()
   dModel = INTERNAL_D()
+  print(os.getcwd())
   gModel.load_weights('./keras/gan1_g.keras')
   dModel.load_weights('./keras/gan1_d.keras')
   return gModel, dModel
