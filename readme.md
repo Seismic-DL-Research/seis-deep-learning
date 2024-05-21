@@ -5,4 +5,8 @@ This is a dev branch. **NOT STABLE!**
 
 What to do in this branch: literally everything pertaining to the development.
 
-Version ckpt0 (May 17th 2024 Edition)
+Job in this version:
+1. Adding application module (ready-to-use models) 
+2. Fixing complex conv2d transpose
+
+Version ckpt0+ (May 17th 2024+ Edition)
