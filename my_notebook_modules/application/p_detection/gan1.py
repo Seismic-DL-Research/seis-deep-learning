@@ -80,9 +80,10 @@ def INTERNAL_D():
 
 
 def gan1():
+  model_loc = 'seis-deep-learning/my_notebook_modules/application/p_detection/keras/&.keras'
   gModel = INTERNAL_G()
   dModel = INTERNAL_D()
-  print(os.getcwd())
-  gModel.load_weights('./keras/gan1_g.keras')
-  dModel.load_weights('./keras/gan1_d.keras')
+  
+  gModel.load_weights(model_loc.replace('&', 'gan1_g'))
+  dModel.load_weights(model_loc.replace('&', 'gan1_d'))
   return gModel, dModel
