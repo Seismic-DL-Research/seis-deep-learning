@@ -82,6 +82,6 @@ def INTERNAL_D():
 def gan1():
   gModel = INTERNAL_G()
   dModel = INTERNAL_D()
-  gModel.load_weights('keras/gan1_g.keras')
-  dModel.load_weights('keras/gan1_d.keras')
+  gModel.load_weights('./keras/gan1_g.keras')
+  dModel.load_weights('./keras/gan1_d.keras')
   return gModel, dModel
