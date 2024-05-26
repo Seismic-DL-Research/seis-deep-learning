@@ -24,6 +24,9 @@ class GAN3():
     
     gModel.load_weights(model_loc.replace('&', 'gan3_g'))
     dModel.load_weights(model_loc.replace('&', 'gan3_d'))
+
+    sf.g_model = gModel
+    sf.d_model = dModel
   
   def INTERNAL_G(sf):
     tf.random.set_seed(6969)
