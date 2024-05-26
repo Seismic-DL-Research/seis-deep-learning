@@ -94,7 +94,7 @@ class GAN1():
     return float(prediction)
 
   def predict_sliding(sf, data, freq, start_sample, end_sample):
-    step = 100/freq
+    step = int(100/freq)
     step_indices = [(start_sample, start_sample + 350)]
     while step_indices[-1][0] + step < end_sample - 350:
       next_step = step_indices[-1][0] + step
