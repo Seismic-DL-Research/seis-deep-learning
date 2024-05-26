@@ -106,6 +106,7 @@ class GAN3():
     step_indices = start_sample
     predictions = []
     while step_indices + step <= end_sample - 350:
+      print(step_indices)
       predictions.append(sf.predict_single(data_z[step_indices:step_indices+350], 
                                            data_e[step_indices:step_indices+350], 
                                            data_n[step_indices:step_indices+350]))
