@@ -88,3 +88,20 @@ class GAN3():
     out = tf.keras.layers.Dense(1, activation='sigmoid')(out)
 
     return tf.keras.Model(inputs=[init_inputs], outputs=[out], name='discriminator_model')
+  
+  def predict_single(sf, data):
+    prediction = sf.d_model(data)[0,0]
+    return float(prediction)
+
+  def predict_sliding(sf, data, freq, start_sample, end_sample):
+    step = int(100/freq)
+    step_indices = start_sample
+    while step_indices + step <= end_sample - 350:
+      print(f'({step_indices}, {step_indices + 350})')
+      step_indices += step
+    
+    print(step_indices)
+    pass
+
+  def predict_batch(sf):
+    pass
