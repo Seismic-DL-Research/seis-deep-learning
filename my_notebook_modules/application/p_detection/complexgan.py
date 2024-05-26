@@ -102,6 +102,6 @@ def complexgan():
   gModel = INTERNAL_G()
   dModel = INTERNAL_D()
   
-  gModel.load_weights(model_loc.replace('&', 'complexgan_g'))
+  # gModel.load_weights(model_loc.replace('&', 'complexgan_g'))
   dModel.load_weights(model_loc.replace('&', 'complexgan_d'))
   return gModel, dModel
