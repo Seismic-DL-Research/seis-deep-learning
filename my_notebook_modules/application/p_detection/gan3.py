@@ -101,15 +101,15 @@ class GAN3():
     prediction = sf.d_model(zen)[0,0]
     return float(prediction)
 
-  def predict_sliding(sf, data, freq, start_sample, end_sample):
+  def predict_sliding(sf, data_z, data_e, data_n, freq, start_sample, end_sample):
     step = int(100/freq)
     step_indices = start_sample
+    predictions = []
     while step_indices + step <= end_sample - 350:
-      print(f'({step_indices}, {step_indices + 350})')
+      predictions.append(sf.predict_single(data_z, data_e, data_n))
       step_indices += step
     
-    print(step_indices)
-    pass
+    return predictions
 
   def predict_batch(sf):
     pass
