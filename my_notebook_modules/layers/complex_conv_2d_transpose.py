@@ -31,45 +31,37 @@ class complex_conv_2d_transpose(tf.keras.layers.Layer):
         trainable=True,
         name='kernel_q'
       )
-    sf.bias_p = sf.add_weight(
-        shape=(sf.kernel_total,),
-        initializer=tf.keras.initializers.GlorotUniform(),
-        trainable=True,
-        name='bias_p'
-      )
-    sf.bias_q = sf.add_weight(
-        shape=(sf.kernel_total,),
-        initializer=tf.keras.initializers.GlorotUniform(),
-        trainable=True,
-        name='bias_q'
-      )
     pass
 
   def call(sf, inputs__):
     u, v = mynbm.layers.utils.disintegrate_complex(inputs__)
-    
+    B = tf.shape(u)[0]
+    out_height = tf.shape(u)[0] - 1 + sf.kernel_size[0]
+    out_width = tf.shape(u)[1] - 1 + sf.kernel_size[1]
+    out_shape = [B, out_height, out_width, sf.kernel_total]
+
     convtr_up = tf.nn.conv2d_transpose(
         input=u, filters=sf.kernel_p,
         strides=sf.universal_strides,
-        output_shape=[2,tf.shape(u)[1] + sf.kernel_size[0], tf.shape(u)[2] + sf.kernel_size[1], sf.kernel_total],
+        output_shape=out_shape,
         padding=sf.padding
     )
     convtr_vq = tf.nn.conv2d_transpose(
-        input=u, filters=sf.kernel_p,
+        input=v, filters=sf.kernel_q,
         strides=sf.universal_strides,
-        output_shape=[2,tf.shape(u)[1] + sf.kernel_size[0], tf.shape(u)[2] + sf.kernel_size[1], sf.kernel_total],
+        output_shape=out_shape,
         padding=sf.padding
     )
     convtr_uq = tf.nn.conv2d_transpose(
         input=u, filters=sf.kernel_p,
         strides=sf.universal_strides,
-        output_shape=[2,tf.shape(u)[1] + sf.kernel_size[0], tf.shape(u)[2] + sf.kernel_size[1], sf.kernel_total],
+        output_shape=out_shape,
         padding=sf.padding
     )
     convtr_vp = tf.nn.conv2d_transpose(
-        input=u, filters=sf.kernel_p,
+        input=v, filters=sf.kernel_q,
         strides=sf.universal_strides,
-        output_shape=[2,tf.shape(u)[1] + sf.kernel_size[0], tf.shape(u)[2] + sf.kernel_size[1], sf.kernel_total],
+        output_shape=out_shape,
         padding=sf.padding
     )
 
