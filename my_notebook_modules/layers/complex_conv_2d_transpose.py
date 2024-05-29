@@ -6,8 +6,8 @@ import my_notebook_modules as mynbm
     name="complex_conv_2d"
 )
 class complex_conv_2d_transpose(tf.keras.layers.Layer):
-  def __init__(sf, kernel_size__, kernel_total__, padding__='VALID',
-              activation__=None):
+  def __init__(sf, kernel_size__, kernel_total__,
+              activation__=None, padding__='VALID'):
     layer_type = tf.constant('cc2d', tf.string)
     layer_name = mynbm.layers.utils.random_name(layer_type)
     super(complex_conv_2d_transpose, sf).__init__(name=layer_name.numpy().decode('utf-8'))
