@@ -37,8 +37,12 @@ class complex_conv_2d_transpose(tf.keras.layers.Layer):
     u, v = mynbm.layers.utils.disintegrate_complex(inputs__)
     B = tf.shape(u)[0]
 
-    out_height = tf.shape(u)[1] - 1 + sf.kernel_size[0]
-    out_width = tf.shape(u)[2] - 1 + sf.kernel_size[1]
+    if sf.padding == 'SAME':
+      out_height = tf.shape(u)[1] - 1 + sf.kernel_size[0]
+      out_width = tf.shape(u)[2] - 1 + sf.kernel_size[1]
+    else:
+      out_height = tf.shape(u)[1] 
+      out_width = tf.shape(u)[2]
     out_shape = [B, out_height, out_width, sf.kernel_total]
 
     convtr_up = tf.nn.conv2d_transpose(
