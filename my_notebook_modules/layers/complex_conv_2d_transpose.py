@@ -70,7 +70,7 @@ class complex_conv_2d_transpose(tf.keras.layers.Layer):
         padding=sf.padding
     )
 
-    real_conv = convtr_up + convtr_vq
+    real_conv = convtr_up - convtr_vq
     imag_conv = convtr_uq + convtr_vp
 
     end_tensor = mynbm.layers.utils.integrate_complex(real_conv, imag_conv)

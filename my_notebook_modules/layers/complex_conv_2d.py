@@ -57,7 +57,7 @@ class complex_conv_2d(tf.keras.layers.Layer):
         padding=sf.padding
     )
 
-    real_conv = conv_up + conv_vq
+    real_conv = conv_up - conv_vq
     imag_conv = conv_uq + conv_vp
 
     end_tensor = mynbm.layers.utils.integrate_complex(real_conv, imag_conv)
