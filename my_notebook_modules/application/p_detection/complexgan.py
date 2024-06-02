@@ -127,7 +127,7 @@ class COMPLEXGAN():
       predictions.append(sf.predict_single(data[step_indices:step_indices+350]))
       step_indices += step
     
-    pass
+    return predictions
 
   def predict_batch(sf):
     pass
