@@ -13,7 +13,7 @@ def decisor(waveform__, power_windows__, nsta__, nlta__,
         nsta__,
         nlta__,
         trigger_threshold__,
-        data_threshold__, True, 4)
+        data_threshold__, True, 2)
 
     tps.append(tp)
     aavg_ratios.append(aavg_ratio)
