@@ -12,7 +12,6 @@ def stalta(waveform_data__, preprocessed_data__,
                    nsta__, nlta__, stalta_trigger__,
                    data_trigger__, normalize__=True, power_type__='power'):
   if (power_type__=='power'):
-    print('here')
     cumsum = np.cumsum(np.abs(waveform_data__) ** 2)
   if (power_type__ == 'nopower'):
     cumsum = np.cumsum(waveform_data__)
