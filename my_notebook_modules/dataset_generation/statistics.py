@@ -28,8 +28,6 @@ def stalta(waveform_data__, preprocessed_data__,
   stalta = sta/lta * (nlta__/nsta__)
   if normalize__: stalta /= np.max(stalta)
 
-  tp, aavg_ratio, score = -1, -1, -1
-
   try:
     notable_data = np.argwhere(preprocessed_data__ > data_trigger__)[:,0]
     trigger_indices = np.argwhere(stalta[notable_data] > stalta_trigger__)[:,0]
