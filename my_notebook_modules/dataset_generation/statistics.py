@@ -46,6 +46,8 @@ def stalta(waveform_data__, preprocessed_data__,
     aavg_ratio = pre_aavg/pos_aavg
   except:
     tp = -1
+    aavg_ratio = -1
+    score = -1
     pass
 
   return stalta, tp, sta, lta, aavg_ratio, score
