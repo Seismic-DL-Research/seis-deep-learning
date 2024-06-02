@@ -95,14 +95,16 @@ class GAN1():
     return float(prediction)
 
   def predict_sliding(sf, data, freq, start_sample, end_sample):
+    data = tf.expand_dims(data, axis=0)
     step = int(100/freq)
     step_indices = start_sample
+    predictions = []
     while step_indices + step <= end_sample - 350:
       print(f'({step_indices}, {step_indices + 350})')
       step_indices += step
+      predictions.append(sf.predict_single(data[step_indices:step_indices+350]))
     
-    print(step_indices)
-    pass
+    return predictions
 
   def predict_batch(sf):
     pass
