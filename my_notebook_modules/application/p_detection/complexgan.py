@@ -111,6 +111,7 @@ class COMPLEXGAN():
   
   def predict_single(sf, data):
     # convert into STFT domain
+    data = data / tf.math.reduce_max(data)
     _, _, Zxx = stft(data, fs=100, nperseg=100, noverlap=94)
     Zxx_real = tf.expand_dims(tf.math.real(Zxx), axis=0)
     Zxx_imag = tf.expand_dims(tf.math.real(Zxx), axis=0)
