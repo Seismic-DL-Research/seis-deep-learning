@@ -91,7 +91,7 @@ class GAN1():
 
   def predict_single(sf, data):
     data = tf.expand_dims(data, axis=0)
-    data = data / tf.maximum(data)
+    data = data / tf.math.reduce_max(data, axis=1)
     prediction = sf.d_model(data)[0,0]
     return float(prediction)
 
