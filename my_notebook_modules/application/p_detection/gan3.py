@@ -93,8 +93,11 @@ class GAN3():
   
   def predict_single(sf, data_z, data_e, data_n):
     data_z = tf.expand_dims(data_z, axis=1)
+    data_z = data_z/tf.math.reduce_max(data_z)
     data_e = tf.expand_dims(data_e, axis=1)
+    data_e = data_e/tf.math.reduce_max(data_e)
     data_n = tf.expand_dims(data_n, axis=1)
+    data_n = data_n/tf.math.reduce_max(data_n)
     zen = tf.concat([data_z, data_e, data_n], axis=1)
     zen = tf.expand_dims(zen, axis=0)
 
