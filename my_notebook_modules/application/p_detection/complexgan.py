@@ -132,6 +132,7 @@ class COMPLEXGAN():
       temp_z.append(Zxx_comp)
       step_indices += step
     
+    print(temp_z.shape)
     predictions = sf.d_model(temp_z)
     return predictions
 
