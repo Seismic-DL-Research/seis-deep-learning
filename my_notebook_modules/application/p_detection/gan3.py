@@ -115,6 +115,27 @@ class GAN3():
       step_indices += step
     
     return predictions
+  
+  def predict_sliding_beta(sf, data_z, data_e, data_n, freq, start_sample, end_sample):
+    step = int(100/freq)
+    step_indices = start_sample
+    predictions = []
+    temp_z = []
+    temp_e = []
+    temp_n = []
+    while step_indices + step <= end_sample - 350:
+      temp_z.append(data_z[step_indices:step_indices+350])
+      temp_e.append(data_e[step_indices:step_indices+350])
+      temp_n.append(data_n[step_indices:step_indices+350])
+      step_indices += step
+    
+    temp_z = tf.expand_dims(tf.convert_to_tensor(temp_z), axis=-1)
+    temp_e = tf.expand_dims(tf.convert_to_tensor(temp_e), axis=-1)
+    temp_n = tf.expand_dims(tf.convert_to_tensor(temp_n), axis=-1)
+
+    zen = tf.concat([temp_z, temp_e, temp_n], axis=-1)
+    print(zen.shape)
+    return 1
 
   def predict_batch(sf):
     pass
