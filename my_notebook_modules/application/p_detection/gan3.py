@@ -91,7 +91,6 @@ class GAN3():
 
     return tf.keras.Model(inputs=[init_inputs], outputs=[out], name='discriminator_model')
   
-  @tf.function
   def predict_single(sf, data_z, data_e, data_n):
     data_z = tf.expand_dims(data_z, axis=1)
     data_z = data_z/tf.math.reduce_max(data_z)
@@ -103,9 +102,8 @@ class GAN3():
     zen = tf.expand_dims(zen, axis=0)
 
     prediction = sf.d_model(zen)[0,0]
-    return prediction
+    return float(prediction)
 
-  @tf.function
   def predict_sliding(sf, data_z, data_e, data_n, freq, start_sample, end_sample):
     step = int(100/freq)
     step_indices = start_sample
