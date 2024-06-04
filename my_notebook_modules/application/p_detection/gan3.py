@@ -134,8 +134,8 @@ class GAN3():
     temp_n = tf.expand_dims(tf.convert_to_tensor(temp_n), axis=-1)
 
     zen = tf.concat([temp_z, temp_e, temp_n], axis=-1)
-    print(zen.shape)
-    return 1
+    predictions = sf.d_model(zen)[0,0]
+    return predictions
 
   def predict_batch(sf):
     pass
