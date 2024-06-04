@@ -103,20 +103,8 @@ class GAN3():
 
     prediction = sf.d_model(zen)[0,0]
     return float(prediction)
-
-  def predict_sliding(sf, data_z, data_e, data_n, freq, start_sample, end_sample):
-    step = int(100/freq)
-    step_indices = start_sample
-    predictions = []
-    while step_indices + step <= end_sample - 350:
-      predictions.append(sf.predict_single(data_z[step_indices:step_indices+350], 
-                                           data_e[step_indices:step_indices+350], 
-                                           data_n[step_indices:step_indices+350]))
-      step_indices += step
-    
-    return predictions
   
-  def predict_sliding_beta(sf, data_z, data_e, data_n, freq, start_sample, end_sample):
+  def predict_sliding(sf, data_z, data_e, data_n, freq, start_sample, end_sample):
     step = int(100/freq)
     step_indices = start_sample
     predictions = []
