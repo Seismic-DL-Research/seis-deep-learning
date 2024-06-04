@@ -112,9 +112,14 @@ class GAN3():
     temp_e = []
     temp_n = []
     while step_indices + step <= end_sample - 350:
-      temp_z.append(data_z[step_indices:step_indices+350])
-      temp_e.append(data_e[step_indices:step_indices+350])
-      temp_n.append(data_n[step_indices:step_indices+350])
+      xdata = data_z[step_indices:step_indices+350]
+      temp_z.append(xdata / tf.math.reduce_max(xdata))
+
+      xdata = data_e[step_indices:step_indices+350]
+      temp_e.append(xdata / tf.math.reduce_max(xdata))
+      
+      xdata = data_n[step_indices:step_indices+350]
+      temp_n.append(xdata / tf.math.reduce_max(xdata))
       step_indices += step
     
     temp_z = tf.expand_dims(tf.convert_to_tensor(temp_z), axis=-1)

@@ -95,14 +95,30 @@ class GAN1():
     prediction = sf.d_model(data)[0,0]
     return float(prediction)
 
-  def predict_sliding(sf, data, freq, start_sample, end_sample):
+  # def predict_sliding(sf, data, freq, start_sample, end_sample):
+  #   step = int(100/freq)
+  #   step_indices = start_sample
+  #   predictions = []
+  #   while step_indices + step <= end_sample - 350:
+  #     predictions.append(sf.predict_single(data[step_indices:step_indices+350]))
+  #     step_indices += step
+    
+  #   return predictions
+  
+  def predict_sliding(sf, data_z, freq, start_sample, end_sample):
     step = int(100/freq)
     step_indices = start_sample
     predictions = []
+    temp_z = []
+
     while step_indices + step <= end_sample - 350:
-      predictions.append(sf.predict_single(data[step_indices:step_indices+350]))
+      xdata = data_z[step_indices:step_indices+350]
+      temp_z.append(xdata / tf.math.reduce_max(xdata))
       step_indices += step
     
+    temp_z = tf.convert_to_tensor(temp_z)
+
+    predictions = sf.d_model(temp_z)
     return predictions
 
   def predict_batch(sf):
