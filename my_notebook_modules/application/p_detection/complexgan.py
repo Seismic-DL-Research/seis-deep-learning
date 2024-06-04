@@ -132,7 +132,7 @@ class COMPLEXGAN():
       temp_z.append(Zxx_comp)
       step_indices += step
     
-    print(temp_z.shape)
+    temp_z = tf.convert_to_tensor(temp_z)
     predictions = sf.d_model(temp_z)
     return predictions
 
