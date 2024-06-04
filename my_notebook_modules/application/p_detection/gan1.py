@@ -108,7 +108,6 @@ class GAN1():
   def predict_sliding(sf, data_z, freq, start_sample, end_sample):
     step = int(100/freq)
     step_indices = start_sample
-    predictions = []
     temp_z = []
 
     while step_indices + step <= end_sample - 350:

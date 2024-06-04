@@ -111,7 +111,6 @@ class COMPLEXGAN():
   
   def predict_single(sf, data):
     # convert into STFT domain
-    data = data / tf.math.reduce_max(data)
     _, _, Zxx = stft(data, fs=100, nperseg=100, noverlap=94)
     Zxx_real = tf.expand_dims(tf.math.real(Zxx), axis=0)
     Zxx_imag = tf.expand_dims(tf.math.real(Zxx), axis=0)
@@ -123,11 +122,17 @@ class COMPLEXGAN():
   def predict_sliding(sf, data, freq, start_sample, end_sample):
     step = int(100/freq)
     step_indices = start_sample
-    predictions = []
+    temp_z = []
     while step_indices + step <= end_sample - 350:
-      predictions.append(sf.predict_single(data[step_indices:step_indices+350]))
+      xdata = data[step_indices:step_indices+350]
+      _, _, Zxx = stft(xdata, fs=100, nperseg=100, noverlap=94)
+      Zxx_real = tf.expand_dims(tf.math.real(Zxx), axis=0)
+      Zxx_imag = tf.expand_dims(tf.math.real(Zxx), axis=0)
+      Zxx_comp = tf.expand_dims(tf.concat([Zxx_real, Zxx_imag], axis=0), axis=-1)
+      temp_z.append(Zxx_comp)
       step_indices += step
     
+    predictions = sf.d_model(temp_z)
     return predictions
 
   def predict_batch(sf):
