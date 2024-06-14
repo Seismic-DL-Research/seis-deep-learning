@@ -7,8 +7,7 @@ def power(data__, w__):
   power = np.concatenate((cumsum[w__:] - cumsum[:-w__], cumsum[:w__]))
   return power
 
-
-@njit(fastmath=True)
+#@njit(fastmath=True)
 def new_stalta(waveform_data__, nsta__, nlta__, trigger__):
   # this is a better approach for STA/LTA
   cumsum = np.cumsum(np.abs(waveform_data__) ** 2)
