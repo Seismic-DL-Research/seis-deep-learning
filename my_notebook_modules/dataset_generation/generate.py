@@ -1,6 +1,6 @@
 import obspy
 import numpy as np
-from calc_stalta import stalta
+from calc_stalta import calc_stalta
 from calc_haversine import calc_haversine
 from calc_snr import calc_snr
 
@@ -10,7 +10,7 @@ def generate(list_of_mseeds):
     stream = obspy.read(mseed)[0]
     knet_stats = stream.stats.knet
     data = stream.data
-    _, tp = stalta(data, 20, 300, 5)
+    _, tp = calc_stalta(data, 20, 300, 5)
 
     # no proper P phase discerned
     if np.shape(tp)[0] == 0: continue
@@ -27,5 +27,5 @@ def generate(list_of_mseeds):
     stla = knet_stats['stla']
     stlo = knet_stats['stlo']
     dist = calc_haversine((evla, evlo), (stla, stlo))
-    snr = calc_
+    snr = calc_snr(data[:tp], data[tp:300])
 
