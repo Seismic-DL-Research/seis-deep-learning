@@ -13,7 +13,7 @@ def generate(list_of_mseeds):
     stream = obspy.read(mseed).detrend(type='constant')[0]
     knet_stats = stream.stats.knet
     data = stream.data * stream.stats.calib * 100
-    _, tp = calc_stalta(data, 20, 300, 5)
+    _, tp = calc_stalta(data, 30, 200, 5)
 
     # no proper P phase discerned
     if np.shape(tp)[0] == 0: continue
