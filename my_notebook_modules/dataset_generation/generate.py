@@ -1,8 +1,8 @@
 import obspy
 import numpy as np
-from calc_stalta import calc_stalta
-from calc_haversine import calc_haversine
-from calc_snr import calc_snr
+from .calc_stalta import calc_stalta
+from .calc_haversine import calc_haversine
+from .calc_snr import calc_snr
 
 def generate(list_of_mseeds):
   for mseed in list_of_mseeds:
