@@ -46,6 +46,7 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
 
     # if exceeds elem_per_tfr, write and reset memory
     if (counts == elem_per_tfr):
+      print(generated_data)
       mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_dest)
       counts = 0
       generated_data = [[], [], [], [], [], [], [], [], [], [], []]
