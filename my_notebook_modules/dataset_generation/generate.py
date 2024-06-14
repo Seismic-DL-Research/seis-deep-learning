@@ -44,6 +44,6 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
     name = mseed.split('/')[-1].split('.')[0]
     generated_data[8].append(name)
     generated_data[9].append(stream.stats.starttime)
-    generated_data[10].append(int(str(stream.stats.starttime).split('.')[0]))  
+    generated_data[10].append(int(str(stream.stats.starttime).split('-')[0]))  
   return generated_data
 
