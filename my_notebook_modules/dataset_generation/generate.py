@@ -12,7 +12,7 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
   keys = ['data.f32', 'dist.f32', 'evla.f32', 'evlo.f32', 
           'stla.f32', 'stlo.f32', 'snr.f32', 'magn.f32',
           'stnm.str', 'time.str',  'year.i32']
-  count = 0
+  counts = 0
 
   for mseed in list_of_mseeds:
     # KiK-net miniSEED: 1 trace per mseed
