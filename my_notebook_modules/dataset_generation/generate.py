@@ -49,7 +49,6 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
     if (counts % elem_per_tfr == 0):
       tfr_name = f'{tfr_dest}:{int(counts/elem_per_tfr)}.tfr'
       mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_name)
-      counts = 0
       generated_data = [[], [], [], [], [], [], [], [], [], [], []]
 
   return 1
