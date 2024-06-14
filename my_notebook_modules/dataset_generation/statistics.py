@@ -7,6 +7,18 @@ def power(data__, w__):
   power = np.concatenate((cumsum[w__:] - cumsum[:-w__], cumsum[:w__]))
   return power
 
+
+@njit(fastmath=True)
+def new_stalta(waveform_data__, nsta__, nlta__, trigger__):
+  # this is a better approach for STA/LTA
+  cumsum = np.cumsum(np.abs(waveform_data__) ** 2)
+  sta = np.concatenate((cumsum[:nsta__], cumsum[nsta__:] - cumsum[:-nsta__]))
+  lta = np.concatenate((cumsum[:nlta__], cumsum[nlta__:] - cumsum[:-nlta__]))
+  sta[:nlta__] = 0
+  stalta = sta/lta * (nlta__/nsta__)
+  print (np.where(stalta > 5))
+  pass
+
 #@njit(fastmath=True)
 def stalta(waveform_data__, preprocessed_data__,
                    nsta__, nlta__, stalta_trigger__,
