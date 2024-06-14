@@ -90,7 +90,7 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
 
   f.close()
 
-def write_tfr_from_list(list_tensor__, keys__, out_file__):
+def write_tfr_from_list(list_tensor, keys, out_file):
   '''
     write_tfr_from_list:
       * Used to write tensorflow binary record files from a python list that is
@@ -113,15 +113,15 @@ def write_tfr_from_list(list_tensor__, keys__, out_file__):
       * (0) <0> [0]
         returns nothing.
   '''
-  keys, keys_type = get_keys_and_types(keys__)
+  keys, keys_type = get_keys_and_types(keys)
 
   collective = tf.train.Features(
     feature={
-      key: featurize(serialize(list_tensor__[i], keys_type[i]))
+      key: featurize(serialize(list_tensor[i], keys_type[i]))
       for i, key in enumerate(keys)
     }
   )
   record_bytes = tf.train.Example(features=collective).SerializeToString()
 
-  with tf.io.TFRecordWriter(f'{out_file__}') as f:
+  with tf.io.TFRecordWriter(f'{out_file}') as f:
     f.write(record_bytes)
