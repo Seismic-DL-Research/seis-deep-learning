@@ -15,9 +15,6 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
   count = 0
 
   for mseed in list_of_mseeds:
-    # if exceeds elem_per_tfr, write and reset memory
-    # if (count == elem_per_tfr):
-    #   mynbm.dataset_utils.io.write_tfr_from_list(generated_data)
     # KiK-net miniSEED: 1 trace per mseed
     stream = obspy.read(mseed).detrend(type='constant')[0]
     knet_stats = stream.stats.knet
@@ -45,5 +42,13 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
     generated_data[8].append(name)
     generated_data[9].append(stream.stats.starttime)
     generated_data[10].append(int(str(stream.stats.starttime).split('-')[0]))  
-  return generated_data
+    counts += 1
+
+    # if exceeds elem_per_tfr, write and reset memory
+    if (count == elem_per_tfr):
+      mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_dest)
+      counts = 0
+      generated_data = [[], [], [], [], [], [], [], [], [], [], []]
+
+  return 1
 
