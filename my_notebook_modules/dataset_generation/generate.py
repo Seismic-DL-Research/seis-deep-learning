@@ -8,7 +8,7 @@ from .calc_snr import calc_snr
 def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
   # 0      1      2      3      4      5      6     7      8      9      10
   # data | dist | evla | evlo | stla | stlo | snr | magn | stnm | time | year
-  generated_data = [[], [], [], [], [], [], [], []]
+  generated_data = [[], [], [], [], [], [], [], [], [], [], []]
   keys = ['data.f32', 'dist.f32', 'evla.f32', 'evlo.f32', 
           'stla.f32', 'stlo.f32', 'snr.f32', 'magn.f32',
           'stnm.str', 'time.str',  'year.i32']
