@@ -15,7 +15,7 @@ def stalta(waveform_data, nsta, nlta, trigger):
   lta = np.concatenate((cumsum[:nlta], cumsum[nlta:] - cumsum[:-nlta]))
   sta[:nlta] = 0
   stalta = sta/lta * (nlta/nsta)
-  tp = np.where(stalta > trigger)
+  tp = np.where(stalta > trigger)[0]
   return tp
 
 # #@njit(fastmath=True)

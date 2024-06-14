@@ -6,7 +6,7 @@ def serialize(data__, dtype__):
 
 def featurize(value__):
   return tf.train.Feature(
-      bytes_list = tf.train.BytesList(value=[value__.numpy()])
+      bytes_list=tf.train.BytesList(value=[value__.numpy()])
   )
 
 def define_type(x):
@@ -20,8 +20,8 @@ def get_keys_and_types(keys__):
   keys_type = [define_type(key.split('.')[1]) for key in keys__]
   return keys, keys_type
 
-def write_tfr_from_dataset(ds__, keys__, batch_size__, 
-                           take_size__, out_file__, batches_per_file__=-1):
+def write_tfr_from_dataset(ds, keys, batch_size, 
+                           take_size, out_file, batches_per_file=-1):
   '''
     write_tfr_from_dataset:
       * Used to write tensorflow binary record files from a dataset.
@@ -52,21 +52,21 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
       * (0) <0> [0]
         returns nothing.
   '''
-  keys, keys_type = get_keys_and_types(keys__)
-  init_filename = (out_file__ if batches_per_file__ == -1 
-                  else f'{".".join(out_file__.split(".")[:-1])}:0.tfr')
+  keys, keys_type = get_keys_and_types(keys)
+  init_filename = (out_file if batches_per_file == -1 
+                  else f'{".".join(out_file.split(".")[:-1])}:0.tfr')
   bar = tqdm(total=1, position=0, bar_format='[{elapsed}] {desc}')
   f = tf.io.TFRecordWriter(init_filename)
   batch_rounds = 0
 
   bar.set_description_str(f'Initializing')
-  for dsElement in ds__.batch(batch_size__).take(take_size__):
+  for dsElement in ds.batch(batch_size).take(take_size):
     # close the current file and open the new file if batches_per_file__ is
     # enabled (!=1).
-    if batches_per_file__ != -1 and batch_rounds % batches_per_file__ == 0:
+    if batches_per_file != -1 and batch_rounds % batches_per_file == 0:
       f.close()
       f = tf.io.TFRecordWriter(
-        f'{".".join(out_file__.split(".")[:-1])}:{int(batch_rounds/batches_per_file__)}.tfr')
+        f'{".".join(out_file.split(".")[:-1])}:{int(batch_rounds/batches_per_file)}.tfr')
     
     collective = tf.train.Features(
         feature = {
@@ -83,8 +83,6 @@ def write_tfr_from_dataset(ds__, keys__, batch_size__,
 
     # update tqdm
     bar.set_description_str(f'Batch Rounds: {batch_rounds}')
-
-    
 
   bar.close()
 
