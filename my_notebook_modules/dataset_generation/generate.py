@@ -23,12 +23,14 @@ def generate(list_of_mseeds):
     if not tp >= 500: continue
   
     generated_data[0].append(data[tp-100:tp+250])
-    generated_data[1].append(calc_haversine((generated_data[2][-1], generated_data[3][-1]), 
-                                            (generated_data[4][-1], generated_data[5][-1])))
     generated_data[2].append(knet_stats['evla'])
     generated_data[3].append(knet_stats['evlo'])
     generated_data[4].append(knet_stats['stla'])
     generated_data[5].append(knet_stats['stlo'])
+    generated_data[1].append(calc_haversine((generated_data[2][-1], generated_data[3][-1]), 
+                                            (generated_data[4][-1], generated_data[5][-1])))
     generated_data[6].append(calc_snr(data[:tp], data[tp:300]))
     generated_data[7].append(knet_stats['mag'])
+  
+  return generated_data
 
