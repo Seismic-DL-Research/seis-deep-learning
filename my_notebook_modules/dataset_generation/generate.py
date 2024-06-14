@@ -26,9 +26,10 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
 
     # need at least 5 second noise
     tp = tp[0]
-    if not tp >= 400: continue
+    clipped_data = data[tp-100:tp+250]
+    if not tp >= 400 or len(clipped_data) != 350: continue
   
-    generated_data[0].append(data[tp-100:tp+250])
+    generated_data[0].append(clipped_data)
     generated_data[2].append(knet_stats['evla'])
     generated_data[3].append(knet_stats['evlo'])
     generated_data[4].append(knet_stats['stla'])
@@ -46,12 +47,9 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
 
     # if exceeds elem_per_tfr, write and reset memory
     if (counts == elem_per_tfr):
-      try:
-        mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_dest)
-        counts = 0
-        generated_data = [[], [], [], [], [], [], [], [], [], [], []]
-      except:
-        return generated_data
+      mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_dest)
+      counts = 0
+      generated_data = [[], [], [], [], [], [], [], [], [], [], []]
 
   return 1
 
