@@ -16,9 +16,9 @@ def generate(list_of_mseeds):
     if np.shape(tp)[0] == 0: continue
 
     # need at least 5 second noise
+    tp = tp[0]
     if not tp >= 500: continue
   
-    tp = tp[0]
     clipped_data = data[tp-100:tp+250]
 
     magn = knet_stats['mag']
