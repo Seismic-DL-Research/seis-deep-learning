@@ -20,7 +20,7 @@ def generate(list_of_mseeds):
 
     # need at least 5 second noise
     tp = tp[0]
-    if not tp >= 500: continue
+    if not tp >= 400: continue
   
     generated_data[0].append(data[tp-100:tp+250])
     generated_data[2].append(knet_stats['evla'])
