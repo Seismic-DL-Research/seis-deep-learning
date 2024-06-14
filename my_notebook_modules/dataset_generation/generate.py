@@ -10,9 +10,9 @@ def generate(list_of_mseeds):
 
   for mseed in list_of_mseeds:
     # KiK-net miniSEED: 1 trace per mseed
-    stream = obspy.read(mseed)[0]
+    stream = obspy.read(mseed).detrend(type='constant')[0]
     knet_stats = stream.stats.knet
-    data = stream.data
+    data = stream.data * stream.stats.calib * 100
     _, tp = calc_stalta(data, 20, 300, 5)
 
     # no proper P phase discerned
