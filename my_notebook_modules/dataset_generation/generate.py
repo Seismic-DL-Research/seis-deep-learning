@@ -49,8 +49,8 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
 
     # if exceeds elem_per_tfr, write and reset memory
     if (counts % elem_per_tfr == 0):
-      tfr_name_P = f'P-{tfr_dest}:{int(counts/elem_per_tfr)}.tfr'
-      tfr_name_N = f'N-{tfr_dest}:{int(counts/elem_per_tfr)}.tfr'
+      tfr_name_P = f'{tfr_dest}:{int(counts/elem_per_tfr)}-P.tfr'
+      tfr_name_N = f'{tfr_dest}:{int(counts/elem_per_tfr)}-N.tfr'
       mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_name_P)
       generated_data[0] = noises
       mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_name_N)
