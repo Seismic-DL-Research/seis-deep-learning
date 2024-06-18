@@ -6,9 +6,10 @@ from .calc_haversine import calc_haversine
 from .calc_snr import calc_snr
 
 def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
-  # 0      1      2      3      4      5      6     7      8      9      10
-  # data | dist | evla | evlo | stla | stlo | snr | magn | stnm | time | year
-  generated_data = [[], [], [], [], [], [], [], [], [], [], []]
+  # 0      1      2      3      4      5      6     7      8      9      10 | 11
+  # data | data | dist | evla | evlo | stla | stlo | snr | magn | stnm | time | year
+  generated_data = [[], [], [], [], [], [], [], [], [], [], [], []]
+  noises = []
   keys = ['data.f32', 'dist.f32', 'evla.f32', 'evlo.f32', 
           'stla.f32', 'stlo.f32', 'snr.f32', 'magn.f32',
           'stnm.str', 'time.str',  'year.i32']
@@ -28,7 +29,8 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
     tp = tp[0]
     clipped_data = data[tp-100:tp+250]
     if not tp >= 400 or len(clipped_data) != 350: continue
-  
+    clipped_noise = data[0:350]
+    noises.append(clipped_noise)
     generated_data[0].append(clipped_data)
     generated_data[2].append(knet_stats['evla'])
     generated_data[3].append(knet_stats['evlo'])
@@ -47,8 +49,11 @@ def generate(list_of_mseeds, tfr_dest, elem_per_tfr):
 
     # if exceeds elem_per_tfr, write and reset memory
     if (counts % elem_per_tfr == 0):
-      tfr_name = f'{tfr_dest}:{int(counts/elem_per_tfr)}.tfr'
-      mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_name)
+      tfr_name_P = f'P-{tfr_dest}:{int(counts/elem_per_tfr)}.tfr'
+      tfr_name_N = f'N-{tfr_dest}:{int(counts/elem_per_tfr)}.tfr'
+      mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_name_P)
+      generated_data[0] = noises
+      mynbm.dataset_utils.io.write_tfr_from_list(generated_data, keys, tfr_name_N)
       generated_data = [[], [], [], [], [], [], [], [], [], [], []]
 
   return 1
