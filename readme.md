@@ -11,4 +11,5 @@ Job in this version:
 1. Adding application module (ready-to-use models) 
 2. Fixing complex conv2d transpose
 
-Version ckpt0+ (May 17th 2024+ Edition)
+[OLD] Version ckpt0+ (May 17th 2024 Edition)
+[CURRENT] Version ckpt1+ (July 26th 2024 Edition)
