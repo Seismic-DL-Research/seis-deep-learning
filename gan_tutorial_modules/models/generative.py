@@ -74,3 +74,25 @@ class Generative(GAN):
 
       # Updating θ_g := θ_g - α(∂L_g/∂θ_g)
       self.gan.generative_optimizer.apply_gradients(zip(grad, self.model.trainable_variables))
+
+  def update_model(self, new_model):
+    contains_error = False
+
+    # check if model's I/O shape is valid
+    input_shape = new_model.layers[0].output.shape[1]
+    output_shape = new_model.layers[-1].output.shape[1]
+
+    try:
+      assert input_shape == self.gan.generative_latent_sample_size
+    except:
+      print(f'Invalid input shape! Expected {self.gan.generative_latent_sample_size} but obtained {input_shape}')
+      contains_error = True
+    
+    try:
+      assert output_shape == self.gan.window_length
+    except:
+      print(f'Invalid output shape! Expected {self.gan.window_length} but obtained {output_shape}')
+      contains_error = True
+
+    # update model if valid
+    if not contains_error: self.model = new_model

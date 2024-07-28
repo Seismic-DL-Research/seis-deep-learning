@@ -14,14 +14,14 @@ class Discriminative(GAN):
     gan.discriminative_module = self
     self.gan = gan
 
-    # Discriminative model
+    # discriminative model
     input_layer = Input(shape=(self.gan.window_length,))
     expanded = gtm.models.customs.VecAddChannel()(input_layer)
 
-    # Load custom Leaky ReLU
+    # load custom Leaky ReLU
     ab_leaky_relu = gtm.models.customs.ab_leaky_relu
 
-    # Begin convolution
+    # begin convolution
     cont = Conv1D(filters=3, kernel_size=5, activation=ab_leaky_relu(0.1,1))(expanded)
     cont = Conv1D(filters=4, kernel_size=8, activation=ab_leaky_relu(0.1,1))(cont)
     cont = Conv1D(filters=3, kernel_size=10, activation=ab_leaky_relu(0.1,1))(cont)
@@ -43,16 +43,16 @@ class Discriminative(GAN):
   def loss(self, X, X_prime):
     # Variable X and X_prime are R^(BxN) with B is the batch size.
     
-    # Define epsilon to avoid nan
+    # define epsilon to avoid nan
     eps = 1e-6
     
-    # First term:
+    # first term:
     first_term = tf.math.log(1 - self.model(X_prime) + eps) # shape: B x 1
 
-    # Second term:
+    # second term:
     second_term = tf.math.log(self.model(X) + eps) # shape: B x 1
 
-    # Total loss
+    # total loss
     loss = first_term + second_term # shape: B x 1
     loss = tf.math.reduce_sum(loss, axis=0) # shape: 1
     loss = - 1* loss[0] # scalar
@@ -65,11 +65,33 @@ class Discriminative(GAN):
     # X_prime is non-P-wave data (shape: BxN)
 
     with tf.GradientTape() as d:
-      # Calculating L_d
+      # calculating L_d
       d_loss = self.loss(X, X_prime)
 
-      # Calculating ∂L_d/∂θ_d
+      # calculating ∂L_d/∂θ_d
       grad = d.gradient(d_loss, self.model.trainable_variables)
 
-      # Updating θ_d := θ_d - α(∂L_d/∂θ_d)
+      # updating θ_d := θ_d - α(∂L_d/∂θ_d)
       self.gan.discriminative_optimizer.apply_gradients(zip(grad, self.model.trainable_variables))
+
+  def update_model(self, new_model):
+    contains_error = False
+
+    # check if model's I/O shape is valid
+    input_shape = new_model.layers[0].output.shape[1]
+    output_shape = new_model.layers[-1].output.shape[1]
+
+    try:
+      assert input_shape == self.gan.window_length
+    except:
+      print(f'Invalid input shape! Expected {self.gan.window_length} but obtained {input_shape}')
+      contains_error = True
+    
+    try:
+      assert output_shape == 1
+    except:
+      print(f'Invalid output shape! Expected 1 but obtained {output_shape}')
+      contains_error = True
+
+    # update model if valid
+    if not contains_error: self.model = new_model

@@ -47,21 +47,23 @@ class GAN():
   def train(self):
     batched_p_wave = self.p_wave_dataset.batch(self.batch_size)
     batched_n_wave = self.n_wave_dataset.batch(self.batch_size)
-    zipped_dataset = zip(batched_p_wave.take(-1), batched_n_wave.take(-1))
     total_batches = 0
 
     for epoch in range(1, self.epoch+1):
       print(f'Epoch {epoch} out of {self.epoch}')
-      for p, n in zipped_dataset:
-        if epoch == 1: total_batches += 1
 
+      for p, n in zip(batched_p_wave.take(-1), batched_n_wave.take(-1)):
+        # Counting total batches in the dataset
+        if epoch == 1: total_batches += 1
+        
+        # training generative model
         for _ in range(self.generative_total_iterations): 
           self.generative_module.update_trainable_tensors(self.discriminative_module.model)
           
+        # training discriminative model
         for _ in range(self.discriminative_total_iterations):
           # training with P and N from dataset
           self.discriminative_module.update_trainable_tensors(p, n)
-          print('g')
           
           # training with P dataset and Generated P (Artificial P)
           latent_sample = tf.random.normal((self.batch_size, self.generative_latent_sample_size),
