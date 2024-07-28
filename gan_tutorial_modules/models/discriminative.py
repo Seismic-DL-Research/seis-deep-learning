@@ -3,13 +3,15 @@ WARNING! This model is just for a tutorial purpose!
 If you want to actually train your data, you may want to hyper tune or
 modify this model. Please act according to your necessity.
 '''
-import gan_tutorial_modules as gtm
 import tensorflow as tf
+import gan_tutorial_modules as gtm
+from gan_tutorial_modules.models import GAN
 from tensorflow.keras.layers import Dense, Conv1DTranspose, Input, Flatten, Conv1D, \
 AveragePooling1D
 
-class Discriminative(gtm.models.GAN):
+class Discriminative(GAN):
   def __init__(self, gan):
+    gan.discriminative_module = self
     self.gan = gan
 
     # Discriminative model
@@ -40,7 +42,6 @@ class Discriminative(gtm.models.GAN):
   @tf.function # adding decorator to accelerate training later
   def loss(self, X, X_prime):
     # Variable X and X_prime are R^(BxN) with B is the batch size.
-    # We devide the equation above into two terms.
     
     # Define epsilon to avoid nan
     eps = 1e-6
@@ -59,7 +60,7 @@ class Discriminative(gtm.models.GAN):
     return loss
 
   @tf.function
-  def update_trainable_tensors(X, X_prime):
+  def update_trainable_tensors(self, X, X_prime):
     # X is P-wave data (shape: BxN)
     # X_prime is non-P-wave data (shape: BxN)
 

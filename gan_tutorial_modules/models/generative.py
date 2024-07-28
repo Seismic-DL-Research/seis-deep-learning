@@ -5,11 +5,13 @@ modify this model. Please act according to your necessity.
 '''
 import gan_tutorial_modules as gtm
 import tensorflow as tf
+from gan_tutorial_modules.models import GAN
 from tensorflow.keras.layers import Dense, Conv1DTranspose, Input, Flatten, Conv1D, \
 AveragePooling1D
 
-class Generative(gtm.models.GAN):
-  def generative(self, gan):
+class Generative(GAN):
+  def __init__(self, gan):
+    gan.generative_module = self
     self.gan = gan
 
     # Generative model
@@ -39,11 +41,21 @@ class Generative(gtm.models.GAN):
 
 
   @tf.function # adding decorator to accelerate training
-  def loss(self, X_G):
-    # Variable X_G is R^(BxN) with B is the batch size.
+  def loss(self, d_model):
+    # d_model is the discriminative model
+
+    # Define epsilon to avoid nan
+    eps = 1e-6
+
+    # We generate the artificial P wave.
+    X0 = tf.random.normal(shape=(self.gan.batch_size, 
+                                self.gan.generative_latent_sample_size), 
+                          mean=self.gan.generative_latent_sample_mean, 
+                          stddev=self.gan.generative_latent_sample_stdev)
+    XG = self.model(X0)
 
     # Total loss
-    loss = tf.math.log(sf.model(X_G)) # B x 1
+    loss = tf.math.log(d_model(XG) + eps) # B x 1
     loss = tf.math.reduce_sum(loss, axis=0) # shape: 1
     loss = -1 * loss[0]
     
@@ -52,20 +64,10 @@ class Generative(gtm.models.GAN):
   @tf.function # adding decorator to accelerate training
   def update_trainable_tensors(self, d_model):
     # d_model is the discriminative model
-
-    # We generate the artificial P wave.
-    # We have defined the value of B, L, mu, and sigma earlier.
-    X0 = tf.random.normal(shape=(self.gan.batch_size, self.gan.window_length), 
-                          mean=self.gan.generative_latent_sample_mean, 
-                          stddev=self.gan.generative_latent_sample_stdev)
     
     with tf.GradientTape() as g:
-      # The generation of the artificial waveform should be put here
-      # so the gradient can be calculated.
-      X_G = self.model(X0)
-
       # Calculating L_g
-      g_loss = self.loss(X_G, d_model)
+      g_loss = self.loss(d_model)
 
       # Calculating ∂L_g/∂θ_g
       grad = g.gradient(g_loss, self.model.trainable_variables)
