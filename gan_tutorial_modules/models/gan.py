@@ -35,13 +35,13 @@ class GAN():
     self.generative_latent_sample_stdev = generative_latent_sample_stdev
     self.discriminative_module = -1
     self.generative_module = -1
-    self.p_wave_dataset = p_wave_dataset.unbatch()
-    self.n_wave_dataset = n_wave_dataset.unbatch()
+    self.p_wave_dataset = p_wave_dataset.unbatch().batch(batch_size)
+    self.n_wave_dataset = n_wave_dataset.unbatch().batch(batch_size)
     self.trigger_threshold = trigger_threshold
 
     if n_wave_dataset_val != -1 and p_wave_dataset_val != -1:
-      self.n_wave_dataset_val = n_wave_dataset_val.unbatch().batch(1)
-      self.p_wave_dataset_val = p_wave_dataset_val.unbatch().batch(1)
+      self.n_wave_dataset_val = n_wave_dataset_val.unbatch().batch(batch_size)
+      self.p_wave_dataset_val = p_wave_dataset_val.unbatch().batch(batch_size)
     pass
 
   # to free up unused memory (garbage)
@@ -54,8 +54,6 @@ class GAN():
   
   # train GAN model
   def train(self):
-    batched_p_wave = self.p_wave_dataset.batch(self.batch_size)
-    batched_n_wave = self.n_wave_dataset.batch(self.batch_size)
     total_batches = 0
 
     for epoch in range(1, self.epoch+1):
@@ -64,7 +62,7 @@ class GAN():
       if epoch != 1:
         bar = tqdm.tqdm(total=total_batches, ascii='._█', position=0,
                         bar_format='|{bar:30}| [{elapsed}<{remaining}] {desc}')
-      for p, n in zip(batched_p_wave.take(-1), batched_n_wave.take(-1)):
+      for p, n in zip(self.p_wave_dataset.take(-1), self.n_wave_dataset.take(-1)):
         tf.keras.backend.clear_session()
 
         # Counting total batches in the dataset
@@ -116,16 +114,11 @@ class GAN():
     # average d loss
     avg_d_loss = total_d_loss / total_val_data
 
-    # calculating false positives and negatives
-    # batch the data to hasten the process
-    p_val = self.p_wave_dataset_val.unbatch().batch(self.batch_size)
-    n_val = self.n_wave_dataset_val.unbatch().batch(self.batch_size)
-
     # False Negative and True Positive
     total_true_positive = 0
     total_false_negative = 0
 
-    for p in p_val:
+    for p in self.p_wave_dataset_val:
       predicted_values = self.discriminative_module.model(p)
       total_true_positive += int(tf.shape(tf.where(predicted_values > self.trigger_threshold))[0])
       total_false_negative += int(tf.shape(tf.where(predicted_values < self.trigger_threshold))[0])
@@ -134,7 +127,7 @@ class GAN():
     total_false_positive = 0
     total_true_negative = 0
 
-    for n in n_val:
+    for n in self.n_wave_dataset_val:
       predicted_values = self.discriminative_module.model(n)
       total_true_negative += int(tf.shape(tf.where(predicted_values < self.trigger_threshold))[0])
       total_false_positive += int(tf.shape(tf.where(predicted_values > self.trigger_threshold))[0])
