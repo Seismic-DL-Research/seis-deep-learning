@@ -74,6 +74,8 @@ class Discriminative(GAN):
       # updating θ_d := θ_d - α(∂L_d/∂θ_d)
       self.gan.discriminative_optimizer.apply_gradients(zip(grad, self.model.trainable_variables))
 
+    return d_loss
+
   def update_model(self, new_model):
     contains_error = False
 

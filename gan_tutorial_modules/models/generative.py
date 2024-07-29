@@ -74,6 +74,8 @@ class Generative(GAN):
 
       # Updating θ_g := θ_g - α(∂L_g/∂θ_g)
       self.gan.generative_optimizer.apply_gradients(zip(grad, self.model.trainable_variables))
+    
+    return g_loss
 
   def update_model(self, new_model):
     contains_error = False
