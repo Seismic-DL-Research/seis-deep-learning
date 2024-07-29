@@ -4,6 +4,7 @@ To understand these variables, please visit gan_tutorial.ipynb!
 import tensorflow as tf
 import tqdm
 import gc
+import copy
 
 class GAN():
   def __init__(self, 
@@ -35,8 +36,8 @@ class GAN():
     self.generative_latent_sample_stdev = generative_latent_sample_stdev
     self.discriminative_module = -1
     self.generative_module = -1
-    self.p_wave_dataset = p_wave_dataset.unbatch().batch(batch_size)
-    self.n_wave_dataset = n_wave_dataset.unbatch().batch(batch_size)
+    self.p_wave_dataset = p_wave_dataset.unbatch().batch(batch_size, drop_remainder=True)
+    self.n_wave_dataset = n_wave_dataset.unbatch().batch(batch_size, drop_remainder=True)
     self.trigger_threshold = trigger_threshold
 
     if n_wave_dataset_val != -1 and p_wave_dataset_val != -1:
@@ -54,17 +55,20 @@ class GAN():
   
   # train GAN model
   def train(self):
+    # updating optimizers
+    self.generative_optimizer = copy.deepcopy(self.generative_optimizer)
+    self.discriminative_optimizer = copy.deepcopy(self.discriminative_optimizer)
     total_batches = 0
 
     for epoch in range(1, self.epoch+1):
+      tf.keras.backend.clear_session()
       print(f'Epoch {epoch} out of {self.epoch}')
 
       if epoch != 1:
         bar = tqdm.tqdm(total=total_batches, ascii='._█', position=0,
                         bar_format='|{bar:30}| [{elapsed}<{remaining}] {desc}')
       for p, n in zip(self.p_wave_dataset.take(-1), self.n_wave_dataset.take(-1)):
-        tf.keras.backend.clear_session()
-
+        
         # Counting total batches in the dataset
         if epoch == 1: total_batches += 1
         else: bar.update(1)
@@ -84,6 +88,7 @@ class GAN():
                                           stddev=self.generative_latent_sample_stdev)
 
           XG = self.generative_module.model(latent_sample)
+          assert tf.shape(p)[0] == tf.shape(XG)[0]
           d_loss = self.discriminative_module.update_trainable_tensors(p, XG)
         
         g_loss = float(g_loss)
@@ -96,8 +101,8 @@ class GAN():
 
       eval = self.evaluate()
 
-      print(f"LOGS: L_D_val: {eval['d_loss']} | TP: {eval['true_positive']} | TN: {eval['true_negative']} | FP: {eval['false_positive']} | FN: {eval['false_negative']} \n")
-      print(f'Found {total_batches} batches per epoch')
+      print(f"LOGS: L_D_val: {eval['d_loss']:.4f} | TP: {eval['true_positive']} | TN: {eval['true_negative']} | FP: {eval['false_positive']} | FN: {eval['false_negative']} \n")
+      if epoch == 1: print(f'Found {total_batches} batches per epoch')
 
   # to evaluate model
   def evaluate(self):
@@ -107,9 +112,9 @@ class GAN():
     # total validation data
     total_val_data = 0
 
-    for p, n in zip(self.p_wave_dataset_val.take(-1), self.p_wave_dataset_val.take(-1)):
+    for p, n in zip(self.p_wave_dataset_val.take(-1), self.n_wave_dataset_val.take(-1)):
       total_val_data += 1
-      total_d_loss = float(self.discriminative_module.loss(p, n))
+      total_d_loss += float(self.discriminative_module.loss(p, n))
 
     # average d loss
     avg_d_loss = total_d_loss / total_val_data
