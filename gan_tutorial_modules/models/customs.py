@@ -49,7 +49,7 @@ def ab_leaky_relu(a, b):
     # We obtain all the positive values and its corresponding indices in the
     # tensor.
     positive_values = tf.boolean_mask(x, x >= 0)
-    positive_values_idc = tf.where(x > 0)
+    positive_values_idc = tf.where(x >= 0)
 
     # We multiply all of the negative values by 'a' and all of the positive
     # values by 'b'
