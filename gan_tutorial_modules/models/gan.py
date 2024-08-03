@@ -18,11 +18,12 @@ class GAN():
                generative_latent_sample_size,
                generative_latent_sample_mean,
                generative_latent_sample_stdev,
-               n_wave_dataset,  # stands for Pre-P phase wave (nosie)
-               p_wave_dataset, # stands for P-wave
-               n_wave_dataset_val=-1, # optional
-               p_wave_dataset_val=-1, # optional
-               trigger_threshold=0.9
+               n_wave_dataset=None,  # stands for Pre-P phase wave (nosie)
+               p_wave_dataset=None, # stands for P-wave
+               n_wave_dataset_val=None, # optional
+               p_wave_dataset_val=None, # optional
+               trigger_threshold=0.9,
+               channel='z'
               ):
     self.batch_size = batch_size
     self.epoch = epoch
@@ -36,14 +37,22 @@ class GAN():
     self.generative_latent_sample_stdev = generative_latent_sample_stdev
     self.discriminative_module = -1
     self.generative_module = -1
-    self.p_wave_dataset = p_wave_dataset.unbatch().batch(batch_size, drop_remainder=True)
-    self.n_wave_dataset = n_wave_dataset.unbatch().batch(batch_size, drop_remainder=True)
     self.trigger_threshold = trigger_threshold
 
-    if n_wave_dataset_val != -1 and p_wave_dataset_val != -1:
+    if channel=='z':
+      self.latent_shape = (self.batch_size, self.generative_latent_sample_size)
+    elif channel=='zne':
+      self.latent_shape = (self.batch_size, self.generative_latent_sample_size, 3)
+    else:
+      print('WARNING, UNKNOWN CHANNEL!')
+
+    # for debugging
+    if p_wave_dataset != None and n_wave_dataset != None:
+      self.p_wave_dataset = p_wave_dataset.unbatch().batch(batch_size, drop_remainder=True)
+      self.n_wave_dataset = n_wave_dataset.unbatch().batch(batch_size, drop_remainder=True)
+    if n_wave_dataset_val != None and p_wave_dataset_val != None:
       self.n_wave_dataset_val = n_wave_dataset_val.unbatch().batch(batch_size)
       self.p_wave_dataset_val = p_wave_dataset_val.unbatch().batch(batch_size)
-    pass
 
   # to free up unused memory (garbage)
   def free_garbage(self):
@@ -83,7 +92,7 @@ class GAN():
           _ = self.discriminative_module.update_trainable_tensors(p, n)
           
           # training with P dataset and Generated P (Artificial P)
-          latent_sample = tf.random.normal((self.batch_size, self.generative_latent_sample_size),
+          latent_sample = tf.random.normal(shape=self.latent_shape,
                                           mean=self.generative_latent_sample_mean,
                                           stddev=self.generative_latent_sample_stdev)
 

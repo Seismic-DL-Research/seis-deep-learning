@@ -48,8 +48,7 @@ class Generative(GAN):
     eps = 1e-6
 
     # We generate the artificial P wave.
-    X0 = tf.random.normal(shape=(self.gan.batch_size, 
-                                self.gan.generative_latent_sample_size), 
+    X0 = tf.random.normal(shape=self.gan.latent_shape, 
                           mean=self.gan.generative_latent_sample_mean, 
                           stddev=self.gan.generative_latent_sample_stdev)
     XG = self.model(X0)
